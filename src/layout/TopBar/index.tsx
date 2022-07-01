@@ -11,8 +11,9 @@ const Topbar: React.FC = () => {
                 <Avatar size={40} icon={<BellOutlined />} style={{ marginLeft: 920 }} />,
                 <>
                     <Avatar size={40} icon={<UserOutlined />} />
-                    <Link to='/admin/userdetail' ><h5>Xin chào <br /> Trần Trí Trung</h5></Link>
-                </>]}>
+                    <a href='/admin/userdetail' ><h5>Xin chào <br /> Trần Trí Trung</h5></a>
+                </>]
+            }>
             </PageHeader >
 
         </div >

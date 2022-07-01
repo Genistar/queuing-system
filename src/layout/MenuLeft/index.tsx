@@ -25,7 +25,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem(<Link to='/admin/dashboard'>Dashboard</Link>, 'sub1', <AppstoreOutlined />),
+    getItem(<a href='/admin/dashboard'>Dashboard</a>, 'sub1', <AppstoreOutlined />),
 
     getItem('Thiết bị', 'sub2', <DesktopOutlined />),
 

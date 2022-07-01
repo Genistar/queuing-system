@@ -16,7 +16,7 @@ const LoginForm = (props: Props) => {
             password: password
         }
         console.log(login)
-        history.push('/admin')
+        history.push('/admin/userdetail')
         window.location.reload()
     }
     return (
