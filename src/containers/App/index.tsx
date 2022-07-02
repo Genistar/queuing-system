@@ -3,9 +3,9 @@ import LayoutPage from '../../layout/LayoutPage';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LoginPage from '../../pages/LoginPage/index';
 import NotFound from '../../pages/NotFound';
-import ForgetPassword from '../../components/ForgetPassword';
+import ForgetPassword from '../../components/Login/ForgetPassword';
 import '../../App.css';
-import 'antd/dist/antd.css'
+import '../../App.less'
 
 const App: React.FC = () => {
     return (

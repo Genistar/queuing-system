@@ -1,9 +1,9 @@
 import { Col, Image, Layout, Row } from 'antd'
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import ForgetPassword from '../../components/ForgetPassword'
-import LoginForm from '../../components/LoginForm'
-import ResetPassword from '../../components/ResetPassword'
+import ForgetPassword from '../../components/Login/ForgetPassword'
+import LoginForm from '../../components/Login/LoginForm'
+import ResetPassword from '../../components/Login/ResetPassword'
 var logo = require('../../assets/Logo-removebg-preview.png')
 
 const { Sider, Header, Content, Footer } = Layout
