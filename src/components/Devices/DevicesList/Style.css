@@ -21,7 +21,7 @@
     background-color: #ffffff;
 }
 .table-row-dark {
-    background-color: #ebebeb;
+    background-color: #FFF2E7;
 }
 .table-radius {
   border-radius: 4rem;
@@ -47,4 +47,8 @@
 .ant-table-container table > thead > tr:first-child th:first-child {
     border-top-left-radius: 12px;
 }
+.ant-table-tbody{
+    border-radius: 12px;
+}
+
 

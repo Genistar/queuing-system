@@ -1,17 +1,17 @@
 import React from 'react';
-import { Col, Input, Row, Select, Typography, Space, Table } from 'antd';
+import { Col, Input, Row, Select, Typography, Space, Table, Button, Card, Badge } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
-import { CaretDownOutlined, SearchOutlined } from '@ant-design/icons'
-import { dropdownIconStyle, textStyle } from './Style';
-import { equimentData } from '../../../config/interface'
+import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
+import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
+import { devicesData } from '../../../config/interface'
 import 'antd/dist/antd.css';
 import './Style.css'
 const { Title, Text } = Typography;
 
-
 type Props = {}
 
-const columns: ColumnsType<equimentData> = [
+
+const columns: ColumnsType<devicesData> = [
     {
         title: 'Mã thiết bị',
         dataIndex: 'key',
@@ -31,11 +31,23 @@ const columns: ColumnsType<equimentData> = [
         title: 'Trạng thái hoạt động',
         dataIndex: 'active',
         key: 'active',
+        render: (dataIndex) => (
+            <span>
+                <Badge status={dataIndex === true ? 'success' : 'warning'} />
+                {dataIndex}
+            </span>
+        ),
     },
     {
         title: 'Trạng thái kết nối',
         dataIndex: 'connect',
         key: 'connect',
+        render: (dataIndex) => (
+            <span>
+                <Badge status={(dataIndex === true) ? 'success' : 'warning'} />
+                {dataIndex}
+            </span>
+        ),
     },
     {
         title: 'Dịch vụ sử dụng',
@@ -46,14 +58,24 @@ const columns: ColumnsType<equimentData> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a>Invite {record.name}</a>
-                <a>Delete</a>
+                <a href={`/admin/devices/detail/${record.id}`}>Chi tiết</a>
             </Space>
         ),
     },
+    {
+        key: 'action',
+        render: (_, record) => {
+            return (
+                <Space size="middle">
+                    <a href={`/admin/devices/update/${record.id}`}>Cập nhật</a>
+                </Space>
+            )
+        }
+    },
 ];
-const data: equimentData[] = [
+const data: devicesData[] = [
     {
+        id: 1,
         key: 'KIO_01',
         name: 'Kiosk',
         address: '192.168.1.10',
@@ -62,6 +84,7 @@ const data: equimentData[] = [
         service: 'sdsdasdsad'
     },
     {
+        id: 2,
         key: 'KIO_01',
         name: 'Kiosk',
         address: '192.168.1.10',
@@ -70,6 +93,7 @@ const data: equimentData[] = [
         service: 'sdsdasdsad'
     },
     {
+        id: 3,
         key: 'KIO_01',
         name: 'Kiosk',
         address: '192.168.1.10',
@@ -78,6 +102,7 @@ const data: equimentData[] = [
         service: 'sdsdasdsad'
     },
     {
+        id: 4,
         key: 'KIO_01',
         name: 'Kiosk',
         address: '192.168.1.10',
@@ -86,6 +111,7 @@ const data: equimentData[] = [
         service: 'sdsdasdsad'
     },
     {
+        id: 5,
         key: 'KIO_01',
         name: 'Kiosk',
         address: '192.168.1.10',
@@ -96,10 +122,10 @@ const data: equimentData[] = [
 ];
 
 
-const EquipmentList: React.FC = (props: Props) => {
+const DevicesList: React.FC = (props: Props) => {
     return (
         <div>
-            <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700 }}>
+            <Title level={3} style={titlePageStyle}>
                 Danh Sách Thiết Bị
             </Title>
             <Row style={{ width: 1200, position: 'absolute', top: 156, left: 224 }}>
@@ -149,7 +175,7 @@ const EquipmentList: React.FC = (props: Props) => {
                 <Table
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
-                        position: 'absolute', top: 244, left: 224, width: 1112,
+                        position: 'absolute', top: 244, left: 224, width: 1152,
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
@@ -158,9 +184,14 @@ const EquipmentList: React.FC = (props: Props) => {
                     pagination={{ position: ["bottomRight"] }}
                 />
             </Row>
-
+            <a style={addDeviceStyle} href='/admin/devices/add'>
+                <Card style={cardButtonAddStyle}>
+                    <PlusOutlined style={iconAddStyle} />
+                </Card>
+                <Text style={addTextStyle}>Thêm <br />thiết bị</Text>
+            </a>
         </div>
     )
 }
 
-export default EquipmentList
+export default DevicesList

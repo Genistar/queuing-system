@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Area } from '@ant-design/plots';
 import { CalendarOutlined } from '@ant-design/icons'
-import type { CalendarMode } from 'antd/lib/calendar/generateCalendar';
-import type { Moment } from 'moment';
-import { Layout, Col, Row, Typography, Card, Tag, Select } from 'antd';
+import { Col, Row, Typography, Card, Tag, Select } from 'antd';
 import { areaStyle, AreaStyle, cardAreaStyle, cardStyle, diagramStyle, frame1Style, frame2Style, frame3Style, frameStyle, iconStyle, labelStyle, selectAreaStyle, tagPercentStyle, tagStyle, textAreaStyle, textLabelStyle, titleAreaStyle } from './Style';
 const { Title, Text } = Typography;
 const { Option } = Select;

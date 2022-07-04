@@ -27,7 +27,7 @@ function getItem(
 const items: MenuItem[] = [
     getItem(<a href='/admin/dashboard'>Dashboard</a>, 'sub1', <AppstoreOutlined />),
 
-    getItem(<a href='/admin/equipment'>Thiết bị</a>, 'sub2', <DesktopOutlined />),
+    getItem(<a href='/admin/devices'>Thiết bị</a>, 'sub2', <DesktopOutlined />),
 
     getItem('Dịch vụ', 'sub3', <WechatOutlined />),
 

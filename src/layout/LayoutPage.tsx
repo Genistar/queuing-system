@@ -8,7 +8,7 @@ import { Link, Route, useHistory } from 'react-router-dom';
 import NotFound from '../pages/NotFound';
 import DetailUserPage from '../pages/DetailUserPage';
 import DashBoard from '../pages/DashBoard';
-import EquipmentPage from '../pages/EquimentPage';
+import DevicesPage from '../pages/DevicesPage';
 var logo = require('../assets/Logo-removebg-preview.png')
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -53,9 +53,7 @@ const LayoutPage: React.FC = (): JSX.Element => {
                         <Route path='/admin/userdetail'>
                             <DetailUserPage />
                         </Route>
-                        <Route path='/admin/equipment'>
-                            <EquipmentPage />
-                        </Route>
+                        <DevicesPage />
                     </div>
                 </Content>
 
