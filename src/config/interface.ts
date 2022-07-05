@@ -1,12 +1,20 @@
 import * as H from "history";
 export interface devicesData {
-    id: number;
     key: string;
     name: string;
     address: string;
     active: string;
     connect: string;
     service: string;
+    user: string;
+    password: string;
+}
+
+export interface serviceData {
+    key: string;
+    name: string;
+    description: string;
+    active: string;
 }
 
 export interface RouteComponentProps<P> {

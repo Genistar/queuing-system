@@ -3,31 +3,31 @@ import { Col, Input, Row, Select, Typography, Space, Table, Button, Card, Badge 
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { devicesData } from '../../../config/interface'
+import { serviceData } from '../../../config/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 const { Title, Text } = Typography;
 
 interface Props {
-    data: devicesData[]
+    data: serviceData[]
 }
 
 
-const columns: ColumnsType<devicesData> = [
+const columns: ColumnsType<serviceData> = [
     {
-        title: 'Mã thiết bị',
+        title: 'Mã dịch vụ',
         dataIndex: 'key',
         key: 'key'
     },
     {
-        title: 'Tên thiết bị',
+        title: 'Tên dịch vụ',
         dataIndex: 'name',
         key: 'name',
     },
     {
-        title: 'Địa chỉ IP',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'Mô tả',
+        dataIndex: 'description',
+        key: 'description',
     },
     {
         title: 'Trạng thái hoạt động',
@@ -39,22 +39,6 @@ const columns: ColumnsType<devicesData> = [
                 {dataIndex}
             </span>
         ),
-    },
-    {
-        title: 'Trạng thái kết nối',
-        dataIndex: 'connect',
-        key: 'connect',
-        render: (dataIndex) => (
-            <span>
-                <Badge status={(dataIndex === true) ? 'success' : 'warning'} />
-                {dataIndex}
-            </span>
-        ),
-    },
-    {
-        title: 'Dịch vụ sử dụng',
-        dataIndex: 'service',
-        key: 'service',
     },
     {
         key: 'action',
@@ -75,12 +59,12 @@ const columns: ColumnsType<devicesData> = [
         }
     },
 ];
-const DevicesList: React.FC<Props> = (props: Props) => {
+const ServiceList: React.FC<Props> = (props: Props) => {
     const { data } = props
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
-                Danh Sách Thiết Bị
+                Danh Sách dịch vụ
             </Title>
             <Row style={{ width: 1200, position: 'absolute', top: 156, left: 224 }}>
                 <Col span={4} style={{ position: 'absolute', left: 0, width: 310 }}>
@@ -147,4 +131,4 @@ const DevicesList: React.FC<Props> = (props: Props) => {
     )
 }
 
-export default DevicesList
+export default ServiceList

@@ -1,0 +1,54 @@
+.text-style {
+    font-weight:600;
+    color: '#282739';
+    font-size: '160px';
+}
+.table-row-light{
+    background-color: #ffffff;
+    border-color: #FFF2E7;
+}
+
+.table-row-dark{
+    background-color: #FFF2E7;
+    border-color: #FFF2E7;
+}
+.ant-table-thead > tr > th {
+    background: #FF7506;
+    color: #f3f3f3;
+    font-size: 16px;
+}
+.table-row-light {
+    background-color: #ffffff;
+}
+.table-row-dark {
+    background-color: #FFF2E7;
+}
+.table-radius {
+  border-radius: 4rem;
+}
+.ant-table table{
+  border-radius: 1rem;
+}
+.ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector{
+    border-radius: 8px;
+    padding:10px 12px;
+    gap: 24px;
+    border: 1.5px solid #D4D4D7;
+}
+
+.anticon .anticon-search > svg{
+    color:'#FF7506';
+}
+
+.ant-table-container table > thead > tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+.ant-table-tbody{
+    border-radius: 12px;
+}
+
+

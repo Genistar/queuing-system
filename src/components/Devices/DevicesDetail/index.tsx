@@ -2,28 +2,21 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Col, Typography, Form, Input, Button } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, layoutStyle, titlePageStyle as T, titlePageStyle } from './Style';
+import { formBottomStyle, formLeftStyle, formRightStyle, layoutStyle, titlePageStyle as T, titlePageStyle } from './Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '../DevicesList/Style';
+import { devicesData } from '../../../config/interface';
 const { Title, Text } = Typography;
 type QuizParams = {
-    id: string;
+    key: string;
 };
 interface Props {
-    data: {
-        id: number;
-        key: string;
-        name: string;
-        address: string;
-        active: string;
-        connect: string;
-        service: string;
-    }[]
+    data: devicesData[]
 }
 const DeviceDetail: React.FC<Props> = (props: Props) => {
     let { data } = props
-    let { id } = useParams<QuizParams>();
+    let { key } = useParams<QuizParams>();
     const Detail = data?.map(d => {
-        if (id === d.id.toString()) {
+        if (key === d.key) {
             return (
                 <Card style={layoutStyle}>
                     <Title level={4} style={T}>
@@ -67,14 +60,14 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
                                 name='user'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.name}</Text>
+                                <Text>{d.user}</Text>
                             </Form.Item>
                             <Form.Item
                                 name='password'
                                 label='Mật khẩu'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.connect}</Text>
+                                <Text>{d.password}</Text>
                             </Form.Item>
                         </Form>
 
@@ -100,7 +93,8 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
                 Danh Sách Thiết Bị
             </Title>
             {Detail}
-            <a style={addDeviceStyle} href='/admin/devices/add'>
+
+            <a style={addDeviceStyle} href='/admin/devices/update/:key'>
                 <Card style={cardButtonAddStyle}>
                     <EditOutlined style={iconAddStyle} />
                 </Card>
