@@ -36,3 +36,8 @@ export const buttonCancelstyle: React.CSSProperties = {
 export const buttonAddstyle: React.CSSProperties = {
     width: 147, height: 48, backgroundColor: '#ff7506', color: '#fff', padding: '10px 24px', borderRadius: 8, fontWeight: 700
 }
+
+export const textStyle: React.CSSProperties = {
+    marginTop: -10,
+    fontWeight: 500,
+}

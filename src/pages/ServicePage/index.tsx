@@ -2,6 +2,9 @@ import { Row } from 'antd'
 import { Route } from 'react-router-dom'
 import React from 'react'
 import ServiceList from '../../components/Service/ServiceList'
+import ServiceAction from '../../components/Service/ServiceAction'
+import ServiceDetail from '../../components/Service/ServiceDetail'
+import { numberData } from '../../constants/data'
 
 type Props = {}
 
@@ -49,11 +52,11 @@ const ServicePage = (props: Props) => {
             <Route path='/admin/service' exact>
                 <ServiceList data={data} />
             </Route>
-            <Route path='/admin/devices/add'>
-                Thêm thiết bị
+            <Route path='/admin/service/add'>
+                <ServiceAction />
             </Route>
-            <Route path='/admin/devices/detail/:key'>
-                Chi tiết
+            <Route path='/admin/service/detail/:key'>
+                <ServiceDetail data={numberData} />
             </Route>
             <Route path='/admin/devices/update/:key'>
                 Cập nhật

@@ -165,7 +165,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
 
                 </Form>
                 <Form style={{ position: 'absolute', top: 442 }}>
-                    <Form.Item name='batbuoc' rules={[{ required: true }]} label=' '> <Text style={{ fontWeight: 400 }}>Là trường thông tin bắt buộc</Text></Form.Item>
+                    <Form.Item name='batbuoc' rules={[{ required: true }]} label=' '> <Text style={{ fontWeight: 400, width: 300, marginTop: -10 }}>Là trường thông tin bắt buộc</Text></Form.Item>
                 </Form>
             </Card>
             <Form layout='inline' style={buttonstyle}>

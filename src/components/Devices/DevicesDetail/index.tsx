@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Col, Typography, Form, Input, Button } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-import { formBottomStyle, formLeftStyle, formRightStyle, layoutStyle, titlePageStyle as T, titlePageStyle } from './Style';
+import { formBottomStyle, formLeftStyle, formRightStyle, layoutStyle, textStyle, titlePageStyle as T, titlePageStyle } from './Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '../DevicesList/Style';
 import { devicesData } from '../../../config/interface';
 const { Title, Text } = Typography;
@@ -28,21 +28,21 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
                                 name='deviceId'
                                 label='Mã Thiết bị'
                                 rules={[{ required: true }]}>
-                                <Text>{d.key}</Text>
+                                <Text style={textStyle}>{d.key}</Text>
                             </Form.Item>
                             <Form.Item
                                 name='deviceName'
                                 label='Tên thiết bị'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.name}</Text>
+                                <Text style={textStyle}>{d.name}</Text>
                             </Form.Item>
                             <Form.Item
                                 name='ipaddress'
                                 label='Địa chỉ IP'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.address}</Text>
+                                <Text style={textStyle}>{d.address}</Text>
                             </Form.Item>
                         </Form>
                     </Col>
@@ -53,21 +53,21 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
                                 label='Loại Thiết bị'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.name}</Text>
+                                <Text style={textStyle}>{d.name}</Text>
                             </Form.Item>
                             <Form.Item
                                 label='Tên đăng nhập'
                                 name='user'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.user}</Text>
+                                <Text style={textStyle}>{d.user}</Text>
                             </Form.Item>
                             <Form.Item
                                 name='password'
                                 label='Mật khẩu'
                                 rules={[{ required: true }]}
                             >
-                                <Text>{d.password}</Text>
+                                <Text style={textStyle}>{d.password}</Text>
                             </Form.Item>
                         </Form>
 
@@ -78,7 +78,7 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
                             label='Dịch vụ sử dụng'
                             rules={[{ required: true }]}
                         >
-                            <Text>{d.service}</Text>
+                            <Text style={textStyle}>{d.service}</Text>
                         </Form.Item>
 
                     </Form>

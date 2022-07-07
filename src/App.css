@@ -31,4 +31,25 @@ body{
   padding: 6px 270px 10px 12px;
   border-radius: 8px;
 }
-
+.ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  height: 44px;
+}
+.ant-picker{
+  height: 44px;
+  font-size:16px;
+  border-radius: 8px;
+}
+.ant-picker-input{
+  padding: 9px 16px 8px 34px;
+  justify-content: space-between;
+}
+.ant-table{
+  border-radius: 12px;
+}
+.ant-list-header{
+  padding-top: 8px;
+  padding-bottom: 40px;
+  background-color: #FF9138;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}

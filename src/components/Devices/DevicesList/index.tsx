@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Button, Card, Badge } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
@@ -7,12 +7,14 @@ import { devicesData } from '../../../config/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 const { Title, Text } = Typography;
+const { Option } = Select;
 
 interface Props {
     data: devicesData[]
 }
 
-
+const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động']
+const connectData = ['Tất cả', 'Đang kết nối', 'Ngừng kết nối']
 const columns: ColumnsType<devicesData> = [
     {
         title: 'Mã thiết bị',
@@ -76,7 +78,9 @@ const columns: ColumnsType<devicesData> = [
     },
 ];
 const DevicesList: React.FC<Props> = (props: Props) => {
-    const { data } = props
+    const { data } = props;
+    const [active, setActive] = useState<String>(activeData[0]);
+    const [connect, setConnect] = useState<String>(connectData[0]);
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -88,12 +92,17 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                     <Select
                         size='large'
                         style={{ width: 300, position: 'absolute', top: 34 }}
+                        value={active}
                         suffixIcon={
                             <CaretDownOutlined
                                 style={dropdownIconStyle}
                             />
                         }
+                        onChange={(e) => { setActive(e) }}
                     >
+                        {activeData.map(s => (
+                            <Option key={s}>{s}</Option>
+                        ))}
                     </Select>
                 </Col>
                 <Col span={4} style={{ position: 'absolute', left: 320, width: 310 }}>
@@ -101,20 +110,24 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                     <Select
                         size='large'
                         style={{ width: 300, position: 'absolute', top: 34 }}
+                        value={connect}
+                        onChange={(e) => { console.log(e); setConnect(e) }}
                         suffixIcon={
                             <CaretDownOutlined
                                 style={dropdownIconStyle}
                             />
                         }
                     >
-
+                        {connectData.map(s => (
+                            <Option key={s}>{s}</Option>
+                        ))}
                     </Select>
                 </Col>
                 <Col span={6} style={{ position: 'absolute', left: 740, width: 310 }}>
                     <Text style={textStyle}>Từ khóa</Text>
                     <Input
                         size='large'
-                        style={{ width: 300, position: 'absolute', top: 34, borderRadius: 8 }}
+                        style={{ width: 300, position: 'absolute', top: 34, borderRadius: 8, height: 44.15 }}
                         placeholder='Nhập từ khóa'
                         suffix={
                             <SearchOutlined

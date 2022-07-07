@@ -1,0 +1,40 @@
+.ant-form-item-label > label{
+    font-size: 16px;
+}
+.ant-card{
+    background-color: '#FFFFFF';
+    height: 600px;
+    top: 25px;
+    border-radius: 12px;
+    position: 'absolute'
+}
+h4.ant-typography, div.ant-typography-h4, div.ant-typography-h4 > textarea, .ant-typography h4{
+    position: absolute;
+    left: 16px;
+    font-weight: 700;
+    color: rgb(255, 117, 6);
+    width: 360px;
+}
+.ant-input{
+    height: 42px;
+    border-radius:8px; 
+    top: -6px;
+    position: 'absolute';
+    color: '#D4D4D7';
+    font-size: 14px;
+}
+.ant-typography{
+    font-weight: 600;
+    color: rgb(40, 39, 57);
+    line-height: 24px;
+    position: absolute;
+}
+.ant-input-suffix{
+    margin-left: 100px;
+}
+.ant-table-wrapper{
+    filter:drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8));
+}
+.ant-table{
+    border-radius: 12px;
+}

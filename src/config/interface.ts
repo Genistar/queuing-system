@@ -17,6 +17,11 @@ export interface serviceData {
     active: string;
 }
 
+export interface numberData {
+    stt: string;
+    status: string;
+}
+
 export interface RouteComponentProps<P> {
     match: match<P>;
     location: H.Location;
