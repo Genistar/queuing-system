@@ -5,7 +5,7 @@ import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, ic
 import './Style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
-import { numberData } from '../../../config/interface';
+import { numberData } from '../../../constants/interface';
 import { ColumnsType } from 'antd/lib/table';
 import { useParams } from 'react-router-dom';
 const { Title, Text } = Typography;

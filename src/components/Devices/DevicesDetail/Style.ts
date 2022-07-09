@@ -5,7 +5,7 @@ export const layoutStyle: React.CSSProperties = {
 }
 
 export const titlePageStyle: React.CSSProperties = {
-    position: 'absolute', left: 24, top: 16, fontWeight: 700, color: '#ff7506'
+    left: 24, top: 16, fontWeight: 700, color: '#ff7506', marginTop: 80, marginLeft: 200
 }
 
 export const inputStyle: React.CSSProperties = {

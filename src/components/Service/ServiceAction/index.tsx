@@ -5,7 +5,7 @@ import { buttonAddstyle, buttonCancelstyle, buttonstyle, formLeftStyle, inputSty
 import { formBottomStyle } from './Style';
 import { layoutStyle } from '../../Devices/DevicesAction/Style';
 import { useHistory } from 'react-router-dom';
-import { devicesData } from '../../../config/interface';
+import { devicesData } from '../../../constants/interface';
 import { useParams } from 'react-router-dom'
 const { Title, Text } = Typography;
 const { Option } = Select;

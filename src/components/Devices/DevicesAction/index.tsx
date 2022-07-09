@@ -5,7 +5,7 @@ import { dropdownIconStyle, titlePageStyle } from '../DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
 import { useHistory } from 'react-router-dom';
-import { devicesData } from '../../../config/interface';
+import { devicesData } from '../../../constants/interface';
 import { useParams } from 'react-router-dom'
 const { Title, Text } = Typography;
 const { Option } = Select;

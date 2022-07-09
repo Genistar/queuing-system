@@ -32,7 +32,7 @@ const items: MenuItem[] = [
 
     getItem(<a href='/admin/service'>Dịch vụ</a>, 'sub3', <WechatOutlined />),
 
-    getItem('Cấp số', 'sub4', <FontAwesomeIcon icon={faLayerGroup} />),
+    getItem(<a href='/admin/givenumber'>Cấp số</a>, 'sub4', <FontAwesomeIcon icon={faLayerGroup} />),
 
     getItem('Báo cáo', 'sub5', <FontAwesomeIcon icon={faChartLine} />),
 

@@ -3,7 +3,7 @@ import { Col, Input, Row, Select, Typography, Space, Table, Button, Card, Badge 
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { devicesData } from '../../../config/interface'
+import { devicesData } from '../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 const { Title, Text } = Typography;

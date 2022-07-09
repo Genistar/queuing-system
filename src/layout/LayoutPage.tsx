@@ -10,6 +10,7 @@ import DetailUserPage from '../pages/DetailUserPage';
 import DashBoard from '../pages/DashBoard';
 import DevicesPage from '../pages/DevicesPage';
 import ServicePage from '../pages/ServicePage';
+import GiveNumberPage from '../pages/GiveNumberPage';
 var logo = require('../assets/Logo-removebg-preview.png')
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -56,6 +57,7 @@ const LayoutPage: React.FC = (): JSX.Element => {
                         </Route>
                         <DevicesPage />
                         <ServicePage />
+                        <GiveNumberPage />
                     </div>
                 </Content>
 

@@ -4,7 +4,7 @@ import { Card, Col, Typography, Form, Input, Button } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { formBottomStyle, formLeftStyle, formRightStyle, layoutStyle, textStyle, titlePageStyle as T, titlePageStyle } from './Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '../DevicesList/Style';
-import { devicesData } from '../../../config/interface';
+import { devicesData } from '../../../constants/interface';
 const { Title, Text } = Typography;
 type QuizParams = {
     key: string;
@@ -19,7 +19,7 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
         if (key === d.key) {
             return (
                 <Card style={layoutStyle}>
-                    <Title level={4} style={T}>
+                    <Title level={4}>
                         Thông tin thiết bị
                     </Title>
                     <Col span={6}>

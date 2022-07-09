@@ -22,6 +22,16 @@ export interface numberData {
     status: string;
 }
 
+export interface giveNumberData {
+    key: string,
+    name: string,
+    serviceName: string,
+    date: string,
+    hsd: string,
+    active: string,
+    nguoncap: string,
+}
+
 export interface RouteComponentProps<P> {
     match: match<P>;
     location: H.Location;

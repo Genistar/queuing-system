@@ -5,7 +5,7 @@ import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/ico
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { serviceData } from '../../../config/interface'
+import { serviceData } from '../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 const { Title, Text } = Typography;
