@@ -32,6 +32,38 @@ export interface giveNumberData {
     nguoncap: string,
 }
 
+export interface accountData {
+    key: number,
+    userName: string,
+    fullName: string,
+    phoneNumber: string,
+    email: string,
+    role: string,
+    password: string,
+    active: boolean
+}
+
+export interface roleData {
+    key: string,
+    roleName: string,
+    roleDecription: string,
+    featureRole: string
+}
+
+export interface dairyData {
+    key: number,
+    userName: string,
+    fullName: string,
+    phoneNumber: string,
+    email: string,
+    role: string,
+    password: string,
+    active: boolean,
+    ipAddress: string,
+    manipulate: string,
+    time: string
+}
+
 export interface RouteComponentProps<P> {
     match: match<P>;
     location: H.Location;

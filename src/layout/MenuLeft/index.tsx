@@ -34,7 +34,7 @@ const items: MenuItem[] = [
 
     getItem(<a href='/admin/givenumber'>Cấp số</a>, 'sub4', <FontAwesomeIcon icon={faLayerGroup} />),
 
-    getItem('Báo cáo', 'sub5', <FontAwesomeIcon icon={faChartLine} />),
+    getItem(<a href='/admin/report'>Báo cáo</a>, 'sub5', <FontAwesomeIcon icon={faChartLine} />),
 
     getItem('Cài đặt hệ thống', 'sub6', <SettingOutlined />,
         <MoreOutlined style={{
@@ -45,9 +45,9 @@ const items: MenuItem[] = [
         }}
         />,
         [
-            getItem('Quản lý vai trò', '9'),
-            getItem('Quản lý tài khoản', '10'),
-            getItem('Nâng cấp tài khoản', '11')
+            getItem(<a href='/admin/role'>Quản lý vai trò</a>, '9'),
+            getItem(<a href='/admin/account'>Quản lý tài khoản</a>, '10'),
+            getItem(<a href='/admin/dairy'>Nhật ký người dùng</a>, '11')
         ]),
 ];
 

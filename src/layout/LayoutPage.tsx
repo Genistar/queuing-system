@@ -7,10 +7,15 @@ import { routes } from '../constants/routes';
 import { Link, Route, useHistory } from 'react-router-dom';
 import NotFound from '../pages/NotFound';
 import DetailUserPage from '../pages/DetailUserPage';
-import DashBoard from '../pages/DashBoard';
-import DevicesPage from '../pages/DevicesPage';
-import ServicePage from '../pages/ServicePage';
-import GiveNumberPage from '../pages/GiveNumberPage';
+import DashBoard from '../features/Dashboard';
+import DevicesPage from '../features/Devices';
+import ServicePage from '../features/Service';
+import GiveNumberPage from '../features/GiveNumber';
+import ReportPage from '../features/Report';
+import RolePage from '../features/SystemSetting/Role';
+import AccountPage from '../features/SystemSetting/Account';
+import DairyList from '../features/SystemSetting/DairyUser/components/DairyList';
+import DairyPage from '../features/SystemSetting/DairyUser';
 var logo = require('../assets/Logo-removebg-preview.png')
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -58,6 +63,10 @@ const LayoutPage: React.FC = (): JSX.Element => {
                         <DevicesPage />
                         <ServicePage />
                         <GiveNumberPage />
+                        <ReportPage />
+                        <RolePage />
+                        <AccountPage />
+                        <DairyPage />
                     </div>
                 </Content>
 

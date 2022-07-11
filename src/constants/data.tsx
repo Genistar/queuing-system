@@ -1,3 +1,5 @@
+import { roleData } from "./interface"
+
 export const numberData = [
     {
         stt: '0001',
@@ -40,4 +42,42 @@ export const numberData = [
         status: 'Đã thực hiện'
     }
 
+]
+export const rolesData = [
+    {
+        key: '1',
+        roleName: 'Kế toán',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
+    {
+        key: '2',
+        roleName: 'Bác sĩ',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
+    {
+        key: '3',
+        roleName: 'Lễ tân',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
+    {
+        key: '4',
+        roleName: 'Quản lý',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
+    {
+        key: '5',
+        roleName: 'Admin',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
+    {
+        key: '6',
+        roleName: 'Superadmin',
+        roleDecription: 'Thực hiện nhiệm vụ về thống kê số liệu và tổng hợp số liệu',
+        featureRole: 'sdsd'
+    },
 ]

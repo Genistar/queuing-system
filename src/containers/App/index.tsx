@@ -3,7 +3,7 @@ import LayoutPage from '../../layout/LayoutPage';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LoginPage from '../../pages/LoginPage/index';
 import NotFound from '../../pages/NotFound';
-import ForgetPassword from '../../components/Login/ForgetPassword';
+import ForgetPassword from '../../features/Login/components/ForgetPassword';
 import '../../App.css';
 import '../../App.less'
 

@@ -3,7 +3,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, PageHeader, Typography } from 'antd';
 import { BellOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
-import Notification from '../../components/Notification';
+import Notification from '../../features/Notification';
 const { Title } = Typography;
 const data = [
     {
