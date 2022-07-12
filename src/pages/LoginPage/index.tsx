@@ -1,6 +1,6 @@
 import { Col, Image, Layout, Row } from 'antd'
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import ForgetPassword from '../../features/Login/components/ForgetPassword'
 import LoginForm from '../../features/Login/components/LoginForm'
 import ResetPassword from '../../features/Login/components/ResetPassword'
@@ -25,7 +25,7 @@ const LoginPage: React.FC = (): JSX.Element => {
                     <Content
                         style={{ marginLeft: '1%', minWidth: '400px' }}
                     >
-                        <Route path='/login' exact>
+                        <Route path='/login' exact={true}>
                             <LoginForm />
                         </Route>
                         <Route path="/login/forgetpassword">

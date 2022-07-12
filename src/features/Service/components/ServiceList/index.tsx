@@ -8,6 +8,7 @@ import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, ic
 import { serviceData } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
+import { Link } from 'react-router-dom';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -47,7 +48,7 @@ const columns: ColumnsType<serviceData> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/admin/service/detail/${record.key}`}>Chi tiết</a>
+                <Link to={`/admin/service/detail/${record.key}`}>Chi tiết</Link>
             </Space>
         ),
     },
@@ -56,7 +57,7 @@ const columns: ColumnsType<serviceData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <a href={`/admin/devices/update/${record.key}`}>Cập nhật</a>
+                    <Link to={`/admin/devices/update/${record.key}`}>Cập nhật</Link>
                 </Space>
             )
         }
@@ -136,12 +137,12 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                     pagination={{ position: ["bottomRight"] }}
                 />
             </Row>
-            <a style={addDeviceStyle} href='/admin/service/add'>
+            <Link style={addDeviceStyle} to='/admin/service/add'>
                 <Card style={cardButtonAddStyle}>
                     <PlusOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Thêm <br />dịch vụ</Text>
-            </a>
+            </Link>
         </div>
     )
 }

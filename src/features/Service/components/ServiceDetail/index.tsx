@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { numberData } from '../../../../constants/interface';
 import { ColumnsType } from 'antd/lib/table';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 const { Title, Text } = Typography;
 type QuizParams = {
     key: string;
@@ -156,20 +156,20 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                     </Card>
                 </Col>
             </Row>
-            <a style={addDeviceStyle} href='/admin/service/update/:key'>
+            <Link style={addDeviceStyle} to='/admin/service/update/:key'>
                 <Card style={cardButtonAddStyle}>
                     <EditOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Cập nhật <br />danh sách</Text>
-            </a>
-            <a style={{
+            </Link>
+            <Link style={{
                 position: 'absolute', top: 344, left: 1406, width: 80, height: 80, padding: '12 4', backgroundColor: '#FFF2E7', border: 'none'
-            }} href='/admin/service'>
+            }} to='/admin/service'>
                 <Card style={cardButtonAddStyle}>
                     <RollbackOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Quay lại</Text>
-            </a>
+            </Link>
         </div>
     )
 }

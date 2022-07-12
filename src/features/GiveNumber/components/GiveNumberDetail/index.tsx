@@ -3,7 +3,7 @@ import React from 'react'
 import { addDeviceStyle } from '../../../Devices/components/DevicesList/Style'
 import { addTextStyle, cardButtonAddStyle, iconAddStyle } from '../GiveNumberList/Style'
 import { RollbackOutlined } from '@ant-design/icons'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { giveNumberData } from '../../../../constants/interface'
 const { Title, Text } = Typography;
 type QuizParams = {
@@ -110,12 +110,12 @@ const GiveNumberDetail: React.FC<Props> = (props: Props) => {
                 </Card>
 
             </Row>
-            <a style={addDeviceStyle} href='/admin/givenumber'>
+            <Link style={addDeviceStyle} to='/admin/givenumber'>
                 <Card style={cardButtonAddStyle}>
                     <RollbackOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Quay lại</Text>
-            </a>
+            </Link>
         </div>
     )
 }

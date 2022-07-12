@@ -75,9 +75,9 @@ const LoginForm = (props: Props) => {
                 }}
                 style={{ marginTop: '-15px' }}
             >
-                <a style={{ color: 'red', fontSize: '14px' }} href="/login/forgetpassword">
+                <Link style={{ color: 'red', fontSize: '14px' }} to="/login/forgetpassword">
                     Quên mật khẩu?
-                </a>
+                </Link>
 
             </Form.Item>
             <Form.Item

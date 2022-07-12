@@ -7,6 +7,7 @@ import 'antd/dist/antd.css';
 import { titlePageStyle } from '../../../../GiveNumber/components/GiveNumberList/Style';
 import { textStyle } from '../../../../Service/components/ServiceList/Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
+import { Link } from 'react-router-dom';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -56,7 +57,7 @@ const columns: ColumnsType<accountData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <a href={`/admin/account/update/${record.key}`}>Cập nhật</a>
+                    <Link to={`/admin/account/update/${record.key}`}>Cập nhật</Link>
                 </Space>
             )
         }
@@ -123,12 +124,12 @@ const AccountList: React.FC<Props> = (props: Props) => {
                     pagination={{ position: ["bottomRight"], pageSize: 7 }}
                 />
             </Row>
-            <a style={addDeviceStyle} href='/admin/account/add'>
+            <Link style={addDeviceStyle} to='/admin/account/add'>
                 <Card style={cardButtonAddStyle}>
                     <PlusOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Thêm <br />tài khoản</Text>
-            </a>
+            </Link>
         </div>
     )
 }

@@ -8,6 +8,7 @@ import 'antd/dist/antd.css';
 import './Style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -64,7 +65,7 @@ const columns: ColumnsType<giveNumberData> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/admin/givenumber/detail/${record.key}`}>Chi tiết</a>
+                <Link to={`/admin/givenumber/detail/${record.key}`}>Chi tiết</Link>
             </Space>
         ),
     },
@@ -184,12 +185,12 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                     pagination={{ position: ["bottomRight"], pageSize: 7 }}
                 />
             </Row>
-            <a style={addDeviceStyle} href='/admin/givenumber/add'>
+            <Link style={addDeviceStyle} to='/admin/givenumber/add'>
                 <Card style={cardButtonAddStyle}>
                     <PlusOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Cấp <br />Số mới</Text>
-            </a>
+            </Link>
         </div>
     )
 }

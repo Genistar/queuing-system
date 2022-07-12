@@ -6,6 +6,7 @@ import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, ic
 import { devicesData } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
+import { Link } from 'react-router-dom';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -62,7 +63,7 @@ const columns: ColumnsType<devicesData> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/admin/devices/detail/${record.key}`}>Chi tiết</a>
+                <Link to={`/admin/devices/detail/${record.key}`}>Chi tiết</Link>
             </Space>
         ),
     },
@@ -71,7 +72,7 @@ const columns: ColumnsType<devicesData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <a href={`/admin/devices/update/${record.key}`}>Cập nhật</a>
+                    <Link to={`/admin/devices/update/${record.key}`}>Cập nhật</Link>
                 </Space>
             )
         }
@@ -150,12 +151,12 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                     pagination={{ position: ["bottomRight"] }}
                 />
             </Row>
-            <a style={addDeviceStyle} href='/admin/devices/add'>
+            <Link style={addDeviceStyle} to='/admin/devices/add'>
                 <Card style={cardButtonAddStyle}>
                     <PlusOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Thêm <br />thiết bị</Text>
-            </a>
+            </Link>
         </div>
     )
 }

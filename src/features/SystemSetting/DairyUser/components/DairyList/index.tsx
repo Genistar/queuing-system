@@ -5,6 +5,9 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { dairyData } from '../../../../../constants/interface'
 import 'antd/dist/antd.css';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 interface Props {
@@ -46,7 +49,7 @@ const DairyList: React.FC<Props> = (props: Props) => {
                         name='role'
                         label='Chọn thời gian'
                     >
-                        <RangePicker showTime />
+                        <RangePicker showTime suffixIcon={<FontAwesomeIcon icon={faCalendar} />} />
                     </Form.Item>
                 </Form>
                 <Form layout='inline' style={{ width: 500 }}>
@@ -80,12 +83,12 @@ const DairyList: React.FC<Props> = (props: Props) => {
                     pagination={{ position: ["bottomRight"], pageSize: 7 }}
                 />
             </Row>
-            <a style={addDeviceStyle} href='/admin/account/add'>
+            <Link style={addDeviceStyle} to='/admin/account/add'>
                 <Card style={cardButtonAddStyle}>
                     <PlusOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Thêm <br />tài khoản</Text>
-            </a>
+            </Link>
         </div>
     )
 }

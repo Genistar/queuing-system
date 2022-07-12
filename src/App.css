@@ -28,7 +28,7 @@ body{
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   width: 100%;
   height: 44px;
-  padding: 6px 270px 10px 12px;
+  padding: 6px 70px 10px 12px;
   border-radius: 8px;
 }
 .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
@@ -54,5 +54,98 @@ body{
   border-top-right-radius: 10px;
 }
 .ant-input-affix-wrapper > input.ant-input {
-  margin-top: -1px;
+  margin-top: -0.5px;
+}
+.g2-tooltip-title{
+  display: none;
+}
+.number-style{
+  margin-top: -22px; margin-left: 110px
+}
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner, .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner, .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  color: #fff;
+  background: #ff7506;
+}
+.ant-picker-cell .ant-picker-cell-inner {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  min-width: 36px;
+  height: 36px;
+  line-height: 24px;
+  border-radius: 8px;
+  transition: background 0.3s, border 0.3s;
+}
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  border: 1px solid #ff7506;
+  border-radius: 8px;
+  content: '';
+}
+.ant-picker-calendar-date-value{
+  padding-top: 6px;
+  padding-right: 1px;
+}
+.ant-menu > .ant-menu-item:hover,
+.ant-menu > .ant-menu-submenu:hover,
+.ant-menu > .ant-menu-item-active,
+.ant-menu> .ant-menu-submenu-active,
+.ant-menu > .ant-menu-item-open,
+.ant-menu> .ant-menu-submenu-open,
+.ant-menu > .ant-menu-item-selected,
+.ant-menu > .ant-menu-submenu-selected
+{
+  background-color: #ff7506;
+  color: #fff;
+}
+.ant-menu-vertical > .ant-menu-item {
+  height: 48px;
+  line-height: 48px;
+}
+
+.ant-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.ant-menu-item-selected,
+.ant-menu-item-selected a{
+  color: #ffffff !important;
+}
+
+.ant-menu-submenu-selected {
+  background-color: #ff7506 ;
+  color: #ffffff !important;
+}
+
+.ant-menu-item-active,
+.ant-menu-submenu-active {
+  color: #ff7506;
+  background-color: #fff2e7;
+}
+
+.ant-menu-submenu-title {
+  display: flex;
+  align-items: center;
+}
+
+.ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 48px;
+  line-height: 48px;
+}
+
+.ant-menu-submenu-expand-icon,
+.ant-menu-submenu-arrow {
+  color: inherit;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #ff7506;
+}
+.ant-menu-item a:hover{
+  color: #fff;
 }

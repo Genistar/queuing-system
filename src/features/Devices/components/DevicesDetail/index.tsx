@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Card, Col, Typography, Form, Input, Button } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import { formBottomStyle, formLeftStyle, formRightStyle, layoutStyle, textStyle, titlePageStyle as T, titlePageStyle } from './Style';
@@ -94,12 +94,12 @@ const DeviceDetail: React.FC<Props> = (props: Props) => {
             </Title>
             {Detail}
 
-            <a style={addDeviceStyle} href='/admin/devices/update/:key'>
+            <Link style={addDeviceStyle} to='/admin/devices/update/:key'>
                 <Card style={cardButtonAddStyle}>
                     <EditOutlined style={iconAddStyle} />
                 </Card>
                 <Text style={addTextStyle}>Cập nhật <br />thiết bị</Text>
-            </a>
+            </Link>
         </div>
     )
 }

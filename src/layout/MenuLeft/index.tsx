@@ -4,6 +4,7 @@ import { faLayerGroup, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -11,14 +12,12 @@ function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
-
     expandIcon?: React.ReactNode,
     children?: MenuItem[],
 ): MenuItem {
     return {
         key,
         icon,
-
         label,
         expandIcon,
         children,
@@ -26,15 +25,15 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem(<a href='/admin/dashboard'>Dashboard</a>, 'sub1', <AppstoreOutlined />),
+    getItem(<Link to='/admin/dashboard'>Dashboard</Link>, '/admin/dashboard', <AppstoreOutlined />),
 
-    getItem(<a href='/admin/devices'>Thiết bị</a>, 'sub2', <DesktopOutlined />),
+    getItem(<Link to='/admin/devices'>Thiết bị</Link>, '/admin/devices', <DesktopOutlined />),
 
-    getItem(<a href='/admin/service'>Dịch vụ</a>, 'sub3', <WechatOutlined />),
+    getItem(<Link to='/admin/service'>Dịch vụ</Link>, '/admin/service', <WechatOutlined />),
 
-    getItem(<a href='/admin/givenumber'>Cấp số</a>, 'sub4', <FontAwesomeIcon icon={faLayerGroup} />),
+    getItem(<Link to='/admin/givenumber'>Cấp số</Link>, '/admin/givenumber', <FontAwesomeIcon icon={faLayerGroup} />),
 
-    getItem(<a href='/admin/report'>Báo cáo</a>, 'sub5', <FontAwesomeIcon icon={faChartLine} />),
+    getItem(<Link to='/admin/report'>Báo cáo</Link>, '/admin/report', <FontAwesomeIcon icon={faChartLine} />),
 
     getItem('Cài đặt hệ thống', 'sub6', <SettingOutlined />,
         <MoreOutlined style={{
@@ -45,9 +44,9 @@ const items: MenuItem[] = [
         }}
         />,
         [
-            getItem(<a href='/admin/role'>Quản lý vai trò</a>, '9'),
-            getItem(<a href='/admin/account'>Quản lý tài khoản</a>, '10'),
-            getItem(<a href='/admin/dairy'>Nhật ký người dùng</a>, '11')
+            getItem(<Link to='/admin/role'>Quản lý vai trò</Link>, '/admin/role'),
+            getItem(<Link to='/admin/account'>Quản lý tài khoản</Link>, '/admin/account'),
+            getItem(<Link to='/admin/dairy'>Nhật ký người dùng</Link>, '/admin/dairy')
         ]),
 ];
 

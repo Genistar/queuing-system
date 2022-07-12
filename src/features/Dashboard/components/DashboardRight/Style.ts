@@ -7,9 +7,15 @@ export const cardStyle = {
     marginTop: 8
 }
 export const numberStyle = {
-    color: '#FF7506', marginTop: -22, marginLeft: 150
+    color: '#FF7506'
 }
 
+export const titleRadiarStyle: React.CSSProperties = {
+    marginLeft: 55, marginTop: -7, fontSize: 14, color: '#FF7506', width: 300
+}
+export const titleRadiarServiceStyle: React.CSSProperties = {
+    marginLeft: 55, marginTop: -7, fontSize: 14, color: '#4277FF', width: 300
+}
 export const statusStyle = { marginLeft: 50, fontSize: 12, color: '#7E7D88' }
 
 export const boxcalendarStyle = {
