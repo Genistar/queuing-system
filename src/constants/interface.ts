@@ -64,6 +64,39 @@ export interface dairyData {
     time: string
 }
 
+export type userType = {
+    id?: string;
+    username: string;
+    password: string;
+    email: string;
+    phone: string;
+    role: string;
+    name: string;
+    isActive: boolean;
+};
+
+export interface defaultState {
+    authLoading: boolean;
+    userId: string;
+    userLogin: userType | null;
+    user: userType | null;
+    users: userType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+export type roleType = {
+    id?: string;
+    name: string;
+    description: string;
+    amountOfUser?: number;
+    authorityA: string[] | undefined;
+    authorityB: string[] | undefined;
+    authorityC: string[] | undefined;
+};
+
 export interface RouteComponentProps<P> {
     match: match<P>;
     location: H.Location;

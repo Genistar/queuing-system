@@ -3,21 +3,24 @@ import React, { useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 
-type Props = {}
 
-const LoginForm = (props: Props) => {
+type Props = {
+    onLogin: (user: string, pwd: string) => void
+}
+const LoginForm: React.FC<Props> = (props: Props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const history = useHistory()
-    const onHandleLogin = (e: any) => {
-        e.preventDefault();
-        var login = {
-            username: username,
-            password: password
+    const { onLogin } = props;
+    const onHandleLogin = async (e: any) => {
+        try {
+            e.preventDefault();
+            onLogin(username, password)
+            history.push('/admin')
+        } catch (error: any) {
+            console.log(error.message)
         }
-        console.log(login)
-        history.push('/admin/userdetail')
-        window.location.reload()
+
     }
     return (
         <Form

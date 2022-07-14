@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Typography, Form, Input, Button, Select } from 'antd'
+import { Card, Col, Typography, Form, Input, Button, Select, message as notice } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
 import { dropdownIconStyle, titlePageStyle } from '../../../../Devices/components/DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
 import { useHistory } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { accountData } from '../../../../../constants/interface';
+import { userType } from '../../../../../constants/interface';
+import { add, get, update, userSelector } from '../../userSlice'
 import { useParams } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../../../../store';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
     key: string;
 };
 interface Props {
-    data: accountData[],
-    addNewData: any
 }
 
 const roleData = ['Kế toán', 'Thu ngân', 'Quản lý']
@@ -29,34 +29,62 @@ const AccountAction: React.FC<Props> = (props: Props) => {
     const [password, setPassword] = useState(String);
     const [retypePassword, setReTypePassword] = useState(String);
     const [role, setRole] = useState(String);
-    const [active, setActive] = useState<Boolean>()
+    const [active, setActive] = useState<boolean>(false)
     let history = useHistory();
     let { key } = useParams<QuizParams>();
-    const { addNewData, data } = props
+    const [form] = Form.useForm()
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector(userSelector);
     const onBack = () => {
         history.goBack()
     }
-
     useEffect(() => {
-        for (let i = 0; i < 46; i++) {
-            if (key === (data[i].key).toString()) {
-                setUserName(data[i].userName)
-            }
+        form.setFieldsValue({
+            ...user,
+            retypePassword: user?.password,
+        });
+        console.log(user)
+    }, [user])
+    useEffect(() => {
+        if (key) {
+            dispatch(get(key))
         }
     }, [])
+
     const onAddDevice = () => {
-        const device = {
-            userName: userName,
-            fullName: fullName,
-            phoneNumber: phoneNumber,
+        const user: userType = {
+            username: userName,
+            name: fullName,
+            phone: phoneNumber,
             email: email,
-            role: 'Kế Toán',
+            role: role,
             password: password,
-            active: active
+            isActive: active
         }
-        addNewData(device)
-        console.log(device)
-        console.log(userName)
+        if (!key) {
+            dispatch(add(user)).then((data) => {
+                if (data.meta.requestStatus == 'fulfilled') {
+                    notice.success('Thêm thành công', 3)
+                } else {
+                    notice.success('Đã xảy ra lỗi', 3)
+                }
+            })
+            history.goBack()
+        }
+        else {
+            dispatch(update({
+                id: key,
+                ...user
+            })).then((data) => {
+                if (data.meta.requestStatus == 'fulfilled') {
+                    dispatch(get(key))
+                    notice.success('Cập nhật thành công', 3)
+                } else {
+                    notice.success('Đã xảy ra lỗi', 3)
+                }
+            })
+            history.goBack()
+        }
     }
     return (
         <div>
@@ -68,9 +96,13 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                     Thông tin tài khoản
                 </Title>
                 <Col span={6}>
-                    <Form layout='vertical' style={formLeftStyle}>
+                    <Form
+                        layout='vertical'
+                        style={formLeftStyle}
+                        form={key ? form : undefined}
+                    >
                         <Form.Item
-                            name='fullName'
+                            name='name'
                             label='Họ tên'
                             rules={[{ required: true }]}>
                             <Input
@@ -81,19 +113,19 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='phoneNumber'
+                            name='phone'
                             label='Số điện thoại'
                             rules={[{ required: true }]}
                         >
                             <Input
-                                name='phoneNumber'
+                                name='phone'
                                 style={inputStyle}
                                 placeholder='Nhập số điện thoại'
                                 onChange={(e) => { setPhoneNumber(e.target.value) }}
                             />
                         </Form.Item>
                         <Form.Item
-                            name='Email'
+                            name='email'
                             label='Email'
                             rules={[{ required: true }]}
                         >
@@ -128,9 +160,13 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                     </Form>
                 </Col>
                 <Col span={6}>
-                    <Form layout='vertical' style={formRightStyle}>
+                    <Form
+                        layout='vertical'
+                        style={formRightStyle}
+                        form={key ? form : undefined}
+                    >
                         <Form.Item
-                            name='userName'
+                            name='username'
                             label='Tên đăng nhập'
                             rules={[{ required: true }]}
                         >
@@ -143,7 +179,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                         </Form.Item>
                         <Form.Item
                             label='Mật khẩu'
-                            name='user'
+                            name='password'
                             rules={[{ required: true }]}
                         >
                             <Input.Password
@@ -152,13 +188,13 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                                 placeholder="Nhập mật khẩu"
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                 style={{
-                                    borderRadius: 8, color: '#D4D4D7', border: '1.5px solid #D4D4D7', fontSize: 14, height: 44.15, marginTop: -7
+                                    borderRadius: 8, color: '#000', border: '1.5px solid #D4D4D7', fontSize: 14, height: 44.15, marginTop: -7
                                 }}
                                 onChange={(e) => { setPassword(e.target.value) }}
                             />
                         </Form.Item>
                         <Form.Item
-                            name='password'
+                            name='retypePassword'
                             label='Nhập lại mật khẩu'
                             rules={[{ required: true }]}
                         >
@@ -174,7 +210,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='active'
+                            name='isActive'
                             label='Tình trạng'
                             rules={[{ required: true }]}
                             style={{ marginTop: 30 }}

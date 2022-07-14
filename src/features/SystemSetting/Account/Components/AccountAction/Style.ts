@@ -9,7 +9,7 @@ export const titlePageStyle: React.CSSProperties = {
 }
 
 export const inputStyle: React.CSSProperties = {
-    padding: '10px 270px 10px 12px', borderRadius: 8, color: '#D4D4D7', border: '1.5px solid #D4D4D7', fontSize: 14, height: 44.15
+    padding: '10px 270px 10px 12px', borderRadius: 8, color: '#000', border: '1.5px solid #D4D4D7', fontSize: 14, height: 44.15
 }
 
 export const formLeftStyle: React.CSSProperties = {

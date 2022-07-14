@@ -1,35 +1,34 @@
-import React, { useState } from 'react';
-import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { accountData } from '../../../../../constants/interface'
+import { accountData, userType } from '../../../../../constants/interface';
+import { userSelector, getAll } from '../../userSlice';
 import 'antd/dist/antd.css';
-import { titlePageStyle } from '../../../../GiveNumber/components/GiveNumberList/Style';
-import { textStyle } from '../../../../Service/components/ServiceList/Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
-    data: accountData[]
 }
 const roleData = ['Tất cả', 'Kế toán', 'Thu ngân', 'Quản lý']
-const columns: ColumnsType<accountData> = [
+const columns: ColumnsType<userType> = [
     {
         title: 'Tên đăng nhập',
-        dataIndex: 'userName',
-        key: 'userName'
+        dataIndex: 'username',
+        key: 'username'
     },
     {
         title: 'Họ tên',
-        dataIndex: 'fullName',
-        key: 'fullName',
+        dataIndex: 'name',
+        key: 'name',
     },
     {
         title: 'Số điện thoại',
-        dataIndex: 'phoneNumber',
-        key: 'phoneNumber',
+        dataIndex: 'phone',
+        key: 'phone',
     },
     {
         title: 'Email',
@@ -43,8 +42,8 @@ const columns: ColumnsType<accountData> = [
     },
     {
         title: 'Trạng thái hoạt động',
-        dataIndex: 'active',
-        key: 'active',
+        dataIndex: 'isActive',
+        key: 'isActive',
         render: (dataIndex) => (
             <span>
                 <Badge status={dataIndex ? 'success' : 'warning'} />
@@ -57,7 +56,7 @@ const columns: ColumnsType<accountData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/account/update/${record.key}`}>Cập nhật</Link>
+                    <Link to={`/admin/account/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
@@ -65,11 +64,16 @@ const columns: ColumnsType<accountData> = [
 ];
 const AccountList: React.FC<Props> = (props: Props) => {
     const [role, setRole] = useState(roleData[0])
-    const { data } = props;
+    const dispatch = useAppDispatch();
+    const { authLoading, users } = useAppSelector(userSelector);
+    useEffect(() => {
+        console.log(users)
+        dispatch(getAll())
+    }, [])
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700, color: '#ff7506' }}>
-                Quản lý cấp số
+                Danh sách tài khoản
             </Title>
             <Row style={{ width: 1200, position: 'absolute', top: 131, left: 24 }}>
                 <Form layout='vertical' style={{ position: 'absolute', top: 5, left: 204 }}>
@@ -113,7 +117,11 @@ const AccountList: React.FC<Props> = (props: Props) => {
             </Row>
             <Row>
                 <Table
-                    dataSource={data}
+                    dataSource={users.map((user) => ({
+                        key: user.id,
+                        ...user
+                    }))}
+                    loading={authLoading}
                     columns={columns}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{

@@ -1,13 +1,27 @@
 import { Col, Image, Layout, Row } from 'antd'
 import React from 'react'
-import { Route } from 'react-router-dom'
-import ForgetPassword from '../../features/Login/components/ForgetPassword'
-import LoginForm from '../../features/Login/components/LoginForm'
-import ResetPassword from '../../features/Login/components/ResetPassword'
-var logo = require('../../assets/Logo-removebg-preview.png')
+import { Route, useHistory } from 'react-router-dom'
+import ForgetPassword from './components/ForgetPassword'
+import LoginForm from './components/LoginForm'
+import ResetPassword from './components/ResetPassword';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../../../config/firebase'
+var logo = require('../../../assets/Logo-removebg-preview.png')
 
 const { Sider, Header, Content, Footer } = Layout
-const LoginPage: React.FC = (): JSX.Element => {
+interface Props {
+    onLogin: (user: string, pwd: string) => void;
+    user: {}
+}
+const LoginPage: React.FC<Props> = (props: Props): JSX.Element => {
+    const { onLogin, user } = props;
+    let history = useHistory()
+    const forgotPassword = (user: string) => {
+        history.push('/login/renewpassword');
+        console.log(user)
+        return sendPasswordResetEmail(auth, user)
+    }
+    console.log(user)
     return (
         <Row>
             <Col span={10}>
@@ -26,10 +40,10 @@ const LoginPage: React.FC = (): JSX.Element => {
                         style={{ marginLeft: '1%', minWidth: '400px' }}
                     >
                         <Route path='/login' exact={true}>
-                            <LoginForm />
+                            <LoginForm onLogin={onLogin} />
                         </Route>
                         <Route path="/login/forgetpassword">
-                            <ForgetPassword />
+                            <ForgetPassword forgotPassword={forgotPassword} />
                         </Route>
                         <Route path="/login/renewpassword">
                             <ResetPassword />

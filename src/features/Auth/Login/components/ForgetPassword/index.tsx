@@ -1,18 +1,20 @@
 import { Button, Form, Input } from 'antd'
 import React, { useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-type Props = {}
+type Props = {
+  forgotPassword: (user: string) => Promise<void>
+}
 
-const ForgetPassword = (props: Props) => {
+const ForgetPassword: React.FC<Props> = (props: Props) => {
   const [email, setEmail] = useState('');
   let history = useHistory();
+  const { forgotPassword } = props;
   const onGetEmail = (e: any) => {
     e.preventDefault()
-    history.push('/login/renewpassword');
-    window.location.reload()
     console.log(email)
+    forgotPassword(email)
   }
   return (
     <Form
@@ -49,11 +51,10 @@ const ForgetPassword = (props: Props) => {
         style={{ marginTop: '-10px' }}
       >
         <label style={{ fontSize: '18px' }}>Vui lòng nhập email để đặt lại mật khẩu của bạn *</label>
-        <Input.Password
+        <Input
           name='email'
           size='large'
-          placeholder="input password"
-          iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+          placeholder="Nhập địa chỉ email"
           style={{ borderRadius: '6px', marginTop: '5px', height: '44px' }}
           onChange={(e) => setEmail(e.target.value)}
         />

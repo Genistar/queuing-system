@@ -35,7 +35,12 @@ const data = [
         time: "12h20 ngày 30/11/2021",
     },
 ];
-const Topbar: React.FC = () => {
+interface Props {
+
+}
+
+const Topbar: React.FC<Props> = () => {
+
     const [showNotify, setShowNotify] = useState(false);
     return (
         <div>
