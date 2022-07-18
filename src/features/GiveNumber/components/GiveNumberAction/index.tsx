@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Modal, Select, Typography } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom';
 import { giveNumberData } from '../../../../constants/interface';
 import moment from 'moment';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { serviceSelector } from '../../../Service/serviceSlice';
+import { getAll as getServices } from '../../../Service/serviceSlice';
 const { Title, Text } = Typography;
 interface Props {
     addNewData: any;
 }
-const serviceData = ['Dịch vụ ngoại khoa', 'Dịch vụ khám răng', 'Dịch vụ khoa sản']
 const GiveNumberAction: React.FC<Props> = (props: Props) => {
-    const [service, setService] = useState<String>(serviceData[0]);
+    const [service, setService] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false)
     let history = useHistory();
     const date = new Date();
     const day = moment(date);
     const { addNewData } = props;
+    const dispatch = useAppDispatch()
+    const { services } = useAppSelector(serviceSelector);
+    useEffect(() => {
+        dispatch(getServices())
+    }, [])
     const onBack = () => {
         history.goBack()
     }
     const addNewNumber = () => {
-        const newdata: giveNumberData = {
-            key: (201 + Math.floor(Math.random() * 100)).toString(),
-            name: 'Trần Trí Trung',
-            serviceName: service.toString(),
-            date: day.format('DD/MM/YYYY'),
-            hsd: day.format('DD/MM/YYYY'),
-            active: 'Hoạt động',
-            nguoncap: 'Kiosk',
-        }
-        addNewData(newdata)
-        setIsModalVisible(true)
-        console.log(newdata)
+        console.log()
     }
     return (
         <div>
@@ -71,9 +67,9 @@ const GiveNumberAction: React.FC<Props> = (props: Props) => {
                     }
                     onChange={(e) => { console.log(e); setService(e) }}
                 >
-                    {serviceData.map((s, index) => (
-                        <Select.Option key={index} value={s}>
-                            {s}
+                    {services.map((s) => (
+                        <Select.Option key={s?.id} value={s?.name}>
+                            {s?.name}
                         </Select.Option>
                     ))}
                 </Select>

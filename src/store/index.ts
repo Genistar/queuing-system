@@ -2,10 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from 'react-redux'
 import userReducer from '../features/SystemSetting/Account/userSlice';
+import deviceReducer from "../features/Devices/deviceSlice";
+import serviceReducer from "../features/Service/serviceSlice";
+import giveNumberReducer from "../features/GiveNumber/giveNumberSlice";
 
 const store = configureStore({
     reducer: {
-        userReducer
+        userReducer,
+        deviceReducer,
+        serviceReducer,
+        giveNumberReducer
     }
 })
 

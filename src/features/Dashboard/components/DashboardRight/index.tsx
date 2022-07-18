@@ -1,7 +1,7 @@
-import { Layout, Col, Row, Typography, Card, Calendar, Radio, Select } from 'antd'
+import { Layout, Col, Row, Typography, Card, Calendar, Radio, Select, Button } from 'antd'
 import React from 'react'
 import { RadialBar } from '@ant-design/plots';
-import { DesktopOutlined, CommentOutlined } from '@ant-design/icons'
+import { DesktopOutlined, CommentOutlined, CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { boxcalendarStyle, calendarStyle, cardStyle, numberStyle, statusStyle, titleRadiarServiceStyle, titleRadiarStyle } from './Style';
@@ -126,9 +126,9 @@ const DashboardRight: React.FC = (props: Props) => {
     console.log(value.format('YYYY-MM-DD'), mode);
   };
   return (
-    <Col style={{ backgroundColor: '#FFF', height: 765, width: 401, marginTop: -205, position: 'absolute', marginLeft: 832 }}>
+    <Col style={{ backgroundColor: '#FFF', height: 765, width: 401, marginTop: -225, position: 'absolute', marginLeft: 832 }}>
       <Title level={3} style={{ color: '#FF7506', marginTop: 104, marginLeft: 24 }}>Tổng quan</Title>
-      <div style={{ marginTop: 120 }}>
+      <div style={{ marginTop: 110 }}>
         <Card style={cardStyle}>
           <Row>
             <Col span={8} >
@@ -194,76 +194,35 @@ const DashboardRight: React.FC = (props: Props) => {
             style={calendarStyle}
             fullscreen={false}
             headerRender={({ value, type, onChange, onTypeChange }) => {
-              const start = 0;
-              const end = 12;
-              const monthOptions = [];
-
               const current = value.clone();
-              const localeData = value.localeData();
-              const months = [];
-              for (let i = 0; i < 12; i++) {
-                current.month(i);
-                months.push(localeData.monthsShort(current));
-              }
-
-              for (let index = start; index < end; index++) {
-                monthOptions.push(
-                  <Select.Option className="month-item" key={`${index}`}>
-                    {months[index]}
-                  </Select.Option>,
-                );
-              }
-              const month = value.month();
-
-              const year = value.year();
-              const options = [];
-              for (let i = year - 10; i < year + 10; i += 1) {
-                options.push(
-                  <Select.Option key={i} value={i} className="year-item">
-                    {i}
-                  </Select.Option>,
-                );
-              }
+              // const localeData = value.localeData();
+              const increaseMonth = (e: number) => {
+                onChange(current.add(e, "month"));
+                console.log(current);
+              };
               return (
-                <div style={{ padding: 8 }}>
+                <div style={{ padding: 8, marginLeft: -30 }}>
                   <Row gutter={8}>
-                    <Col>
-                      <Radio.Group
-                        size="small"
-                        onChange={e => onTypeChange(e.target.value)}
-                        value={type}
-                      >
-                        <Radio.Button value="month">Month</Radio.Button>
-                        <Radio.Button value="year">Year</Radio.Button>
-                      </Radio.Group>
-                    </Col>
-                    <Col>
-                      <Select
-                        size="small"
-                        dropdownMatchSelectWidth={false}
-                        className="my-year-select"
-                        onChange={newYear => {
-                          const now = value.clone().year(Number(newYear));
-                          onChange(now);
+                    <Col span={3}>
+                      <Button
+                        onClick={() => {
+                          increaseMonth(-1);
                         }}
-                        value={String(year)}
-                      >
-                        {options}
-                      </Select>
+                        style={{ border: "none", width: "50px", marginTop: "-10px", marginLeft: 10 }}
+                        icon={<CaretLeftOutlined style={{ marginTop: "-14px", color: '#ff7506' }} />}
+                      />
                     </Col>
-                    <Col>
-                      <Select
-                        size="small"
-                        dropdownMatchSelectWidth={false}
-                        value={String(month)}
-                        onChange={selectedMonth => {
-                          const newValue = value.clone();
-                          newValue.month(parseInt(selectedMonth, 10));
-                          onChange(newValue);
+                    <Col span={18} style={{ textAlign: "center", marginTop: 0, marginLeft: -60 }}>
+                      <Typography.Text style={{ fontSize: "18px", fontWeight: "500", color: "#FF7506", width: 150 }} >{String(current.format("DD MMM yyyy"))}</Typography.Text>
+                    </Col>
+                    <Col span={3}>
+                      <Button
+                        onClick={() => {
+                          increaseMonth(1);
                         }}
-                      >
-                        {monthOptions}
-                      </Select>
+                        style={{ border: "none", width: "50px", marginTop: "-10px", marginLeft: 50 }}
+                        icon={<CaretRightOutlined style={{ marginTop: "-14px", color: '#ff7506' }} />}
+                      />
                     </Col>
                   </Row>
                 </div>

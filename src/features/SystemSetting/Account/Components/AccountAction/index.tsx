@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Col, Typography, Form, Input, Button, Select, message as notice } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
 import { dropdownIconStyle, titlePageStyle } from '../../../../Devices/components/DevicesList/Style';
-import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
+import { buttonAddstyle, buttonCancelstyle, buttonstyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
 import { useHistory } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
@@ -49,7 +49,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
         if (key) {
             dispatch(get(key))
         }
-    }, [])
+    }, [key])
 
     const onAddDevice = () => {
         const user: userType = {
@@ -63,7 +63,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
         }
         if (!key) {
             dispatch(add(user)).then((data) => {
-                if (data.meta.requestStatus == 'fulfilled') {
+                if (data.meta.requestStatus === 'fulfilled') {
                     notice.success('Thêm thành công', 3)
                 } else {
                     notice.success('Đã xảy ra lỗi', 3)
@@ -76,7 +76,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                 id: key,
                 ...user
             })).then((data) => {
-                if (data.meta.requestStatus == 'fulfilled') {
+                if (data.meta.requestStatus === 'fulfilled') {
                     dispatch(get(key))
                     notice.success('Cập nhật thành công', 3)
                 } else {

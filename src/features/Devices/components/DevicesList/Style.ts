@@ -13,7 +13,7 @@ export const textStyle: React.CSSProperties = {
 
 export const dropdownIconStyle: React.CSSProperties = {
     color: '#FF7506',
-    fontSize: 20
+    fontSize: 20,
 }
 
 export const searchStyle: React.CSSProperties = {

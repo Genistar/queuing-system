@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import { Card, Col, Typography, Form, Input, Button, Select } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Col, Typography, Form, Input, Button, Select, message as notice } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
 import { dropdownIconStyle, titlePageStyle } from '../DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
 import { useHistory } from 'react-router-dom';
-import { devicesData } from '../../../../constants/interface';
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import tagRender from './tagProps';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { add, deviceSelector, get, update } from '../../deviceSlice';
+import { deviceType } from '../../../../constants/interface';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
@@ -15,7 +18,24 @@ type QuizParams = {
 type Props = {
 }
 
-const deviceTypeData = ['Kiosk', 'Display counter', 'Endoscopy device']
+const deviceTypeData = ['Kiosk', 'Display counter', 'Endoscopy device'];
+const serviceData = [
+    {
+        value: 'Khám tim mạch',
+    },
+    {
+        value: 'Khám Sản - Phụ Khoa',
+    },
+    {
+        value: 'Khám răng hàm mặt',
+    },
+    {
+        value: 'Khám hô hấp',
+    },
+    {
+        value: 'Khám tổng quát'
+    }
+];
 
 const DevicesAction: React.FC<Props> = (props: Props) => {
     const [deviceType, setDeviceType] = useState(String)
@@ -24,7 +44,10 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
     const [ipAddress, setIpAddress] = useState(String);
     const [user, setUser] = useState(String);
     const [password, setPassword] = useState(String);
-    const [service, setService] = useState(String)
+    const [service, setService] = useState<string[]>([]);
+    const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
+    const { device } = useAppSelector(deviceSelector)
     let history = useHistory();
     let { key } = useParams<QuizParams>();
     const onBack = () => {
@@ -34,23 +57,48 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
         setDeviceType(value)
     }
     const onAddDevice = () => {
-        const device = {
-            deviceName: name,
-            deviceType: deviceType,
+        const newDevice: deviceType = {
+            name: name,
+            type: deviceType,
             deviceId: deviceId,
-            ipAddress: ipAddress,
-            user: user,
+            ip: ipAddress,
+            username: user,
             password: password,
-            service: service
+            services: service,
         }
-        if (key === deviceId) {
-            console.log('Cập nhật thiết bị : ' + device.deviceName)
-        }
-        else {
-            console.log('Thêm thiết bị')
+        if (!key) {
+            dispatch(add(newDevice)).then((data) => {
+                if (data.meta.requestStatus === 'fulfilled') {
+                    notice.success('Thêm thành công ', 3);
+                }
+                else {
+                    notice.success('Đã xảy ra lỗi', 2)
+                }
+            })
+        } else {
+            dispatch(update({
+                id: key,
+                ...newDevice
+            })).then((data) => {
+                if (data.meta.requestStatus === 'fulfilled') {
+                    dispatch(get(key))
+                    notice.success('Cập nhật thành công ', 3);
+                }
+                else {
+                    notice.success('Đã xảy ra lỗi', 2)
+                }
+            })
         }
 
     }
+    useEffect(() => {
+        form.setFieldsValue(device)
+    }, [device])
+    useEffect(() => {
+        if (key) {
+            dispatch(get(key))
+        }
+    }, [key])
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -61,7 +109,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                     {key ? 'Cập nhật thiết bị' : 'Thông tin thiết bị'}
                 </Title>
                 <Col span={6}>
-                    <Form layout='vertical' style={formLeftStyle}>
+                    <Form layout='vertical' style={formLeftStyle} form={form}>
                         <Form.Item
                             name='deviceId'
                             label='Mã Thiết bị'
@@ -74,24 +122,24 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='deviceName'
+                            name='name'
                             label='Tên thiết bị'
                             rules={[{ required: true }]}
                         >
                             <Input
-                                name='deviceName'
+                                name='name'
                                 style={inputStyle}
                                 placeholder='Nhập mã thiết bị'
                                 onChange={(e) => { setName(e.target.value) }}
                             />
                         </Form.Item>
                         <Form.Item
-                            name='ipaddress'
+                            name='ip'
                             label='Địa chỉ IP'
                             rules={[{ required: true }]}
                         >
                             <Input
-                                name='ipaddress'
+                                name='ip'
                                 style={inputStyle}
                                 placeholder='Nhập mã thiết bị'
                                 onChange={(e) => { setIpAddress(e.target.value) }}
@@ -100,11 +148,12 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                     </Form>
                 </Col>
                 <Col span={6}>
-                    <Form layout='vertical' style={formRightStyle}>
+                    <Form layout='vertical' style={formRightStyle} form={form}>
                         <Form.Item
-                            name='loaithietbi'
+                            name='type'
                             label='Loại Thiết bị'
                             rules={[{ required: true }]}
+                            style={{ marginTop: -5 }}
                         >
                             <Select
                                 placeholder='Chọn loại thiết bị'
@@ -116,6 +165,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                                 }
                                 value={deviceType}
                                 onChange={handleChange}
+                                style={{ marginTop: -4 }}
                             >
                                 {deviceTypeData.map((type) => (
                                     <Option key={type} value={type}>{type}</Option>
@@ -124,11 +174,12 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                         </Form.Item>
                         <Form.Item
                             label='Tên đăng nhập'
-                            name='user'
+                            name='username'
                             rules={[{ required: true }]}
+                            style={{ marginTop: 28 }}
                         >
                             <Input
-                                name='user'
+                                name='username'
                                 style={inputStyle}
                                 placeholder='Nhập mã thiết bị'
                                 onChange={(e) => { setUser(e.target.value) }}
@@ -138,6 +189,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                             name='password'
                             label='Mật khẩu'
                             rules={[{ required: true }]}
+                            style={{ marginTop: 21 }}
                         >
                             <Input
                                 name='password'
@@ -149,17 +201,19 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                     </Form>
 
                 </Col>
-                <Form layout='vertical' style={formBottomStyle}>
+                <Form layout='vertical' style={formBottomStyle} form={form}>
                     <Form.Item
-                        name='service'
+                        name='services'
                         label='Dịch vụ sử dụng'
                         rules={[{ required: true }]}
                     >
-                        <Input
-                            name='service'
-                            style={inputStyle}
-                            placeholder='Nhập mã thiết bị'
-                            onChange={(e) => { setService(e.target.value) }}
+                        <Select
+                            mode="multiple"
+                            showArrow
+                            tagRender={tagRender}
+                            style={{ width: '100%' }}
+                            options={serviceData}
+                            onChange={(e) => { setService(e) }}
                         />
                     </Form.Item>
 

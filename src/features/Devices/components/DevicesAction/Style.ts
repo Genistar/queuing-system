@@ -9,15 +9,15 @@ export const titlePageStyle: React.CSSProperties = {
 }
 
 export const inputStyle: React.CSSProperties = {
-    padding: '10px 270px 10px 12px', borderRadius: 8, color: '#D4D4D7', border: '1.5px solid #D4D4D7', fontSize: 14
+    padding: '10px 270px 10px 12px', borderRadius: 8, color: '#000', border: '1.5px solid #D4D4D7', fontSize: 14
 }
 
 export const formLeftStyle: React.CSSProperties = {
-    height: 76, width: 540, top: 36, left: 0, position: 'absolute'
+    height: 76, width: 540, top: 36, left: 1, position: 'absolute'
 }
 
 export const formRightStyle: React.CSSProperties = {
-    height: 76, width: 540, top: 36, left: 562, position: 'absolute'
+    height: 76, width: 540, top: 38, left: 562, position: 'absolute'
 }
 
 export const formBottomStyle: React.CSSProperties = {

@@ -1,49 +1,46 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import { defaultDeviceState, deviceType, Ifilter, userType } from '../../constants/interface';
-import { RootState } from '../../store';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import { defaultServiceState, Ifilter, serviceType } from "../../constants/interface";
+import { RootState } from "../../store";
 
-const initialState: defaultDeviceState = {
+
+const initialState: defaultServiceState = {
     loading: false,
-    device: null,
-    devices: [],
+    service: null,
+    services: [],
     message: {
         fail: false,
         text: "",
     },
 };
 
-export const getAll = createAsyncThunk("devices/getAll",
+export const getAll = createAsyncThunk("services/getAll",
     async (filter?: Ifilter) => {
-        let devices: deviceType[] = [];
+        let services: serviceType[] = [];
 
-        const queryUser = await getDocs(collection(db, "devices"));
+        const queryUser = await getDocs(collection(db, "services"));
         queryUser.forEach((value) => {
-            devices.push({
+            services.push({
                 id: value.id,
-                ...(value.data() as deviceType),
+                ...(value.data() as serviceType),
             });
         });
         if (filter) {
-            if (filter.active !== null)
-                devices = devices.filter(
-                    (device) => device.isActive === filter.active
+            if (filter.active != null)
+                services = services.filter(
+                    (service) => service.isActive == filter.active
                 );
-            if (filter.connect !== null)
-                devices = devices.filter(
-                    (device) => device.isConnect === filter.connect
-                );
-            if (filter.keywords !== "")
-                devices = devices.filter(
-                    (device) =>
-                        device.name
+            if (filter.keywords != "")
+                services = services.filter(
+                    (service) =>
+                        service.name
                             .toLowerCase()
                             .includes(filter.keywords?.toLowerCase()) ||
-                        device.type
+                        service.description
                             .toLowerCase()
                             .includes(filter.keywords.toLowerCase()) ||
-                        device.deviceId
+                        service.serviceId
                             .toLowerCase()
                             .includes(filter.keywords.toLowerCase())
                 );
@@ -52,44 +49,43 @@ export const getAll = createAsyncThunk("devices/getAll",
         //     const roleSnap = await getDoc(doc(db, "roles", user.role as string));
         //     user.role = (roleSnap.data() as roleType).name;
         // }
-        devices.reverse();
-        return devices;
+        services.reverse();
+        return services;
     });
+export const get = createAsyncThunk("service/get", async (id: string) => {
+    let service: serviceType;
 
-export const add = createAsyncThunk(
-    "device/add",
-    async (values: deviceType) => {
-        const newDevice = doc(collection(db, "devices"));
-        await setDoc(newDevice, values);
-        const deviceRef = doc(db, "devices", newDevice.id);
-        const deviceSnap = await getDoc(deviceRef);
-        return deviceSnap;
-    }
-);
-export const get = createAsyncThunk("devices/get", async (id: string) => {
-    let device: deviceType;
-
-    const deviceSnap = await getDoc(doc(db, "devices", id));
-    // const roleSnap = await getDoc(doc(db, "roles", (userSnap.data() as userType).role));
-    device = {
+    const serviceRef = doc(db, "services", id);
+    const serviceSnap = await getDoc(serviceRef);
+    service = {
         id,
-        ...(deviceSnap.data() as deviceType),
-        // role: (roleSnap.data() as roleType).name,
+        ...(serviceSnap.data() as serviceType),
     };
 
-    return device;
+    return service;
 });
 
-export const update = createAsyncThunk(
-    "devices/updateDevice",
-    async (value: deviceType) => {
-        const deviceRef = doc(db, "devices", value.id as string);
-        await updateDoc(deviceRef, value);
+export const add = createAsyncThunk(
+    "service/add",
+    async (values: serviceType) => {
+        const newService = doc(collection(db, "services"));
+        await setDoc(newService, values);
+        const serviceRef = doc(db, "services", newService.id);
+        const serviceSnap = await getDoc(serviceRef);
+        return serviceSnap;
     }
 );
 
-const deviceSlice = createSlice({
-    name: 'device',
+export const update = createAsyncThunk(
+    "service/updateService",
+    async (value: serviceType) => {
+        const serviceRef = doc(db, "services", value.id as string);
+        await updateDoc(serviceRef, value);
+    }
+);
+
+const serviceSlice = createSlice({
+    name: 'service',
     initialState,
     reducers: {
 
@@ -100,7 +96,7 @@ const deviceSlice = createSlice({
         });
         builder.addCase(getAll.fulfilled, (state, action) => {
             if (action.payload) {
-                state.devices = action.payload;
+                state.services = action.payload;
                 state.message.fail = false;
                 state.message.text = "";
             } else {
@@ -119,7 +115,7 @@ const deviceSlice = createSlice({
         });
         builder.addCase(get.fulfilled, (state, action) => {
             if (action.payload) {
-                state.device = action.payload;
+                state.service = action.payload;
                 state.message.fail = false;
                 state.message.text = "";
             } else {
@@ -146,9 +142,8 @@ const deviceSlice = createSlice({
         });
     }
 })
-const deviceReducer = deviceSlice.reducer;
+const serviceReducer = serviceSlice.reducer;
 
-export const deviceSelector = (state: RootState) => state.deviceReducer;
+export const serviceSelector = (state: RootState) => state.serviceReducer;
 
-
-export default deviceReducer
+export default serviceReducer

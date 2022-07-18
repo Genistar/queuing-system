@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Button, Card, Badge } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { devicesData } from '../../../../constants/interface'
+import { devicesData, deviceType } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { deviceSelector, getAll } from '../../deviceSlice';
+import { connect } from 'http2';
+import { servicesVersion } from 'typescript';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -14,9 +18,8 @@ interface Props {
     data: devicesData[]
 }
 
-const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động']
-const connectData = ['Tất cả', 'Đang kết nối', 'Ngừng kết nối']
-const columns: ColumnsType<devicesData> = [
+
+const columns: ColumnsType<deviceType> = [
     {
         title: 'Mã thiết bị',
         dataIndex: 'key',
@@ -29,41 +32,57 @@ const columns: ColumnsType<devicesData> = [
     },
     {
         title: 'Địa chỉ IP',
-        dataIndex: 'address',
-        key: 'address',
+        dataIndex: 'ip',
+        key: 'ip',
     },
     {
         title: 'Trạng thái hoạt động',
-        dataIndex: 'active',
-        key: 'active',
+        dataIndex: 'isActive',
+        key: 'isActive',
         render: (dataIndex) => (
             <span>
                 <Badge status={dataIndex === true ? 'success' : 'warning'} />
-                {dataIndex}
+                {dataIndex === true ? 'Đang hoạt động' : 'Ngưng hoạt động'}
             </span>
         ),
     },
     {
         title: 'Trạng thái kết nối',
-        dataIndex: 'connect',
-        key: 'connect',
+        dataIndex: 'isConnect',
+        key: 'isConnect',
         render: (dataIndex) => (
             <span>
                 <Badge status={(dataIndex === true) ? 'success' : 'warning'} />
-                {dataIndex}
+                {dataIndex === true ? 'Đang kết nối' : 'Ngưng kết nối'}
             </span>
         ),
     },
     {
         title: 'Dịch vụ sử dụng',
-        dataIndex: 'service',
-        key: 'service',
+        dataIndex: 'services',
+        key: 'services',
+        render: (dataIndex) => (
+            <span>
+                {
+                    dataIndex.lenght < 20 ?
+                        dataIndex.map((datas: any) => {
+                            return dataIndex.find(
+                                (data: any) => data === datas
+                            )
+                        }).join(', ') : dataIndex.map((datas: any) => {
+                            return dataIndex.find(
+                                (data: any) => data === datas
+                            )
+                        }).join(', ').substring(0, 20)
+                }...<a style={{ textDecorationLine: 'underline' }}>Xem thêm</a>
+            </span>
+        ),
     },
     {
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Link to={`/admin/devices/detail/${record.key}`}>Chi tiết</Link>
+                <Link to={`/admin/devices/detail/${record.id}`} >Chi tiết</Link>
             </Space>
         ),
     },
@@ -72,16 +91,21 @@ const columns: ColumnsType<devicesData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/devices/update/${record.key}`}>Cập nhật</Link>
+                    <Link to={`/admin/devices/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
     },
 ];
 const DevicesList: React.FC<Props> = (props: Props) => {
-    const { data } = props;
-    const [active, setActive] = useState<String>(activeData[0]);
-    const [connect, setConnect] = useState<String>(connectData[0]);
+    const [active, setActive] = useState<boolean | null>(null)
+    const [connect, setConnect] = useState<boolean | null>(null)
+    const [keywords, setKeywords] = useState<string>("");
+    const dispatch = useAppDispatch()
+    const { loading, devices } = useAppSelector(deviceSelector)
+    useEffect(() => {
+        dispatch(getAll({ active, connect, keywords }))
+    }, [active, connect, keywords])
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -93,6 +117,7 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                     <Select
                         size='large'
                         style={{ width: 300, position: 'absolute', top: 34 }}
+                        defaultValue={null}
                         value={active}
                         suffixIcon={
                             <CaretDownOutlined
@@ -101,9 +126,15 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                         }
                         onChange={(e) => { setActive(e) }}
                     >
-                        {activeData.map(s => (
-                            <Option key={s}>{s}</Option>
-                        ))}
+                        <Option value={null}>
+                            Tất cả
+                        </Option>
+                        <Option value={true}>
+                            Đang hoạt động
+                        </Option>
+                        <Option value={false}>
+                            Ngưng hoạt động
+                        </Option>
                     </Select>
                 </Col>
                 <Col span={4} style={{ position: 'absolute', left: 320, width: 310 }}>
@@ -111,6 +142,7 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                     <Select
                         size='large'
                         style={{ width: 300, position: 'absolute', top: 34 }}
+                        defaultValue={null}
                         value={connect}
                         onChange={(e) => { console.log(e); setConnect(e) }}
                         suffixIcon={
@@ -119,9 +151,15 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                             />
                         }
                     >
-                        {connectData.map(s => (
-                            <Option key={s}>{s}</Option>
-                        ))}
+                        <Option value={null}>
+                            Tất cả
+                        </Option>
+                        <Option value={true}>
+                            Đang kết nối
+                        </Option>
+                        <Option value={false}>
+                            Mất kết nối
+                        </Option>
                     </Select>
                 </Col>
                 <Col span={6} style={{ position: 'absolute', left: 740, width: 310 }}>
@@ -135,6 +173,7 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                                 style={{ color: '#FF7506', fontSize: 20 }}
                             />
                         }
+                        onChange={(e) => setKeywords(e.target.value)}
                     />
                 </Col>
             </Row>
@@ -146,8 +185,12 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
+                    loading={loading}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={devices.map((device) => ({
+                        key: device.deviceId,
+                        ...device
+                    }))}
                     pagination={{ position: ["bottomRight"] }}
                 />
             </Row>

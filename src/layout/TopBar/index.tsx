@@ -4,6 +4,8 @@ import { Avatar, Button, PageHeader, Typography } from 'antd';
 import { BellOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 import Notification from '../../features/Notification';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { userSelector } from '../../features/SystemSetting/Account/userSlice';
 const { Title } = Typography;
 const data = [
     {
@@ -42,6 +44,8 @@ interface Props {
 const Topbar: React.FC<Props> = () => {
 
     const [showNotify, setShowNotify] = useState(false);
+    const dispatch = useAppDispatch();
+    const { userLogin } = useAppSelector(userSelector);
     return (
         <div>
             <PageHeader title="Dashboard" style={{ position: 'absolute', zIndex: 1 }} extra={[
@@ -56,7 +60,7 @@ const Topbar: React.FC<Props> = () => {
                 ,
                 <>
                     <Avatar size={40} icon={<UserOutlined />} />
-                    <Link to='/admin/userdetail' ><h5>Xin chào <br /> Trần Trí Trung</h5></Link>
+                    <Link to='/admin/userdetail' ><h5>Xin chào <br /> {userLogin?.name}</h5></Link>
                 </>]
             }>
             </PageHeader >

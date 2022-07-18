@@ -1,10 +1,13 @@
 import { Card, Col, Form, Row, Typography } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { addDeviceStyle } from '../../../Devices/components/DevicesList/Style'
 import { addTextStyle, cardButtonAddStyle, iconAddStyle } from '../GiveNumberList/Style'
 import { RollbackOutlined } from '@ant-design/icons'
 import { Link, useParams } from 'react-router-dom'
 import { giveNumberData } from '../../../../constants/interface'
+import { useAppDispatch, useAppSelector } from '../../../../store'
+import { get, giveNumberSelector } from '../../giveNumberSlice'
+import moment from 'moment'
 const { Title, Text } = Typography;
 type QuizParams = {
     key: string;
@@ -16,83 +19,11 @@ interface Props {
 const GiveNumberDetail: React.FC<Props> = (props: Props) => {
     let { key } = useParams<QuizParams>();
     const { data } = props;
-    const Detail = data?.map(number => {
-        if (key === number.key) {
-            return (
-                <div>
-                    <Col span={7}>
-                        <Form style={{ height: 76, top: 38, left: 16, position: 'absolute' }}>
-                            <Form.Item
-                                name='serviceId'
-                                label='Họ tên'
-                            >
-                                {number.name}
-                            </Form.Item>
-                            <Form.Item
-                                name='serviceName'
-                                label='Tên dịch vụ'
-                                style={{ marginTop: -10 }}
-                            >
-                                {number.serviceName}
-                            </Form.Item>
-                            <Form.Item
-                                name='decriptionService'
-                                label='Số thứ tự'
-                                style={{ marginTop: -10 }}
-                            >
-                                {number.key}
-                            </Form.Item>
-                            <Form.Item
-                                name='decriptionService'
-                                label='Thời gian cấp'
-                                style={{ marginTop: -10 }}
-                            >
-                                {number.date}
-                            </Form.Item>
-                            <Form.Item
-                                name='decriptionService'
-                                label='Hạn sử dụng'
-                                style={{ marginTop: -10 }}
-                            >
-                                {number.hsd}
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                    <Col span={7} style={{ left: 568 }}>
-                        <Form style={{ height: 76, top: 58, left: 16, position: 'absolute' }}>
-                            <Form.Item
-                                name='serviceId'
-                                label='Nguồn cấp'
-                            >
-                                {number.nguoncap}
-                            </Form.Item>
-                            <Form.Item
-                                name='serviceName'
-                                label='Trạng thái'
-                                style={{ marginTop: -10 }}
-                            >
-                                {number.active}
-                            </Form.Item>
-                            <Form.Item
-                                name='decriptionService'
-                                label='Số điện thoại'
-                                style={{ marginTop: -10 }}
-                            >
-                                0946150333
-                            </Form.Item>
-                            <Form.Item
-                                name='decriptionService'
-                                label='Địa chỉ email'
-                                style={{ marginTop: -10 }}
-                            >
-                                tritrung.tr@gmail.com
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                </div>
-            )
-        }
-    })
+    const dispatch = useAppDispatch();
+    const { giveNumber } = useAppSelector(giveNumberSelector)
+    useEffect(() => {
+        dispatch(get(key))
+    }, [key])
     return (
         <div>
             <Title level={3} style={{
@@ -106,7 +37,86 @@ const GiveNumberDetail: React.FC<Props> = (props: Props) => {
                     <Title level={4} style={{ top: 16 }}>
                         Thông tin cấp số
                     </Title>
-                    {Detail}
+                    <div>
+                        <Col span={7}>
+                            <Form style={{ height: 76, top: 38, left: 16, position: 'absolute' }}>
+                                <Form.Item
+                                    name='serviceId'
+                                    label='Họ tên'
+                                >
+                                    {giveNumber?.name}
+                                </Form.Item>
+                                <Form.Item
+                                    name='serviceName'
+                                    label='Tên dịch vụ'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {giveNumber?.service}
+                                </Form.Item>
+                                <Form.Item
+                                    name='decriptionService'
+                                    label='Số thứ tự'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {giveNumber?.number}
+                                </Form.Item>
+                                <Form.Item
+                                    name='decriptionService'
+                                    label='Thời gian cấp'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {
+                                        moment(
+                                            giveNumber?.timeGet.toDate()
+                                        ).format("HH:mm - DD/MM/YYYY")
+                                    }
+                                </Form.Item>
+                                <Form.Item
+                                    name='decriptionService'
+                                    label='Hạn sử dụng'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {
+                                        moment(
+                                            giveNumber?.date.toDate()
+                                        ).format("HH:mm - DD/MM/YYYY")
+                                    }
+                                </Form.Item>
+                            </Form>
+                        </Col>
+                        <Col span={7} style={{ left: 568 }}>
+                            <Form style={{ height: 76, top: 58, left: 16, position: 'absolute' }}>
+                                <Form.Item
+                                    name='serviceId'
+                                    label='Nguồn cấp'
+                                >
+                                    {giveNumber?.source}
+                                </Form.Item>
+                                <Form.Item
+                                    name='serviceName'
+                                    label='Trạng thái'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {giveNumber?.status === 'waiting' ?
+                                        'Đang chờ' : (giveNumber?.status === 'used' ? 'Đã sử dụng' : 'Bỏ qua')}
+                                </Form.Item>
+                                <Form.Item
+                                    name='decriptionService'
+                                    label='Số điện thoại'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {giveNumber?.phoneNumber}
+                                </Form.Item>
+                                <Form.Item
+                                    name='decriptionService'
+                                    label='Địa chỉ email'
+                                    style={{ marginTop: -10 }}
+                                >
+                                    {giveNumber?.email}
+                                </Form.Item>
+                            </Form>
+                        </Col>
+                    </div>
                 </Card>
 
             </Row>

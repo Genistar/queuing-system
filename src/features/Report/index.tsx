@@ -10,7 +10,6 @@ type Props = {}
 const ReportPage: React.FC = (props: Props) => {
     const date = new Date();
     const day = moment(date);
-    console.log(day)
     const giveNumberData: giveNumberData[] = [];
     for (let i = 0; i < 46; i++) {
         giveNumberData.push({

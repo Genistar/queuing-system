@@ -149,3 +149,32 @@ body{
 .ant-menu-item a:hover{
   color: #fff;
 }
+.ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  cursor: text;
+  height: 44.15px;
+  border-radius: 8px;
+}
+.ant-select-dropdown {
+  border-radius: 8px;
+  font-size: 16px;
+  height: 152px;
+  padding-top: 10px;
+}
+.ant-select-item {
+  align-items: center;
+  font-size: 16px;
+  height: 44px;
+  padding-top: 5px;
+}
+.ant-select-item:hover {
+  background: #FFF2E7;
+}
+.ant-select-item:active {
+  background:#FF7506;
+  color: #fff;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  background-color:#FF7506;
+}

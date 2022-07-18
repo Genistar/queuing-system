@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { serviceData } from '../../../../constants/interface'
+import { serviceData, serviceType } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { getAll, serviceSelector } from '../../serviceSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
-    data: serviceData[]
 }
 
-const activeData = ['Tất cả', 'Ngưng hoạt động', 'Hoạt động']
-const columns: ColumnsType<serviceData> = [
+const columns: ColumnsType<serviceType> = [
     {
         title: 'Mã dịch vụ',
-        dataIndex: 'key',
-        key: 'key'
+        dataIndex: 'serviceId',
+        key: 'serviceId'
     },
     {
         title: 'Tên dịch vụ',
@@ -35,12 +35,12 @@ const columns: ColumnsType<serviceData> = [
     },
     {
         title: 'Trạng thái hoạt động',
-        dataIndex: 'active',
-        key: 'active',
+        dataIndex: 'isActive',
+        key: 'isActive',
         render: (dataIndex) => (
             <span>
                 <Badge status={dataIndex === true ? 'success' : 'warning'} />
-                {dataIndex}
+                {dataIndex === true ? 'Đang hoạt động' : 'Ngừng hoạt động'}
             </span>
         ),
     },
@@ -48,7 +48,7 @@ const columns: ColumnsType<serviceData> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Link to={`/admin/service/detail/${record.key}`}>Chi tiết</Link>
+                <Link to={`/admin/service/detail/${record.id}`}>Chi tiết</Link>
             </Space>
         ),
     },
@@ -57,15 +57,20 @@ const columns: ColumnsType<serviceData> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/devices/update/${record.key}`}>Cập nhật</Link>
+                    <Link to={`/admin/services/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
     },
 ];
 const ServiceList: React.FC<Props> = (props: Props) => {
-    const { data } = props;
-    const [active, setActive] = useState<String>(activeData[0])
+    const [active, setActive] = useState<boolean | null>(null);
+    const [keywords, setKeywords] = useState<string>("")
+    const dispatch = useAppDispatch();
+    const { loading, services } = useAppSelector(serviceSelector)
+    useEffect(() => {
+        dispatch(getAll({ keywords, active }))
+    }, [keywords, active])
     return (
         <div style={{ width: 700 }}>
             <Title level={3} style={titlePageStyle}>
@@ -77,16 +82,23 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                     <Select
                         size='large'
                         style={{ width: '145%', position: 'absolute', top: 34 }}
-                        value={active}
+                        defaultValue={null}
                         suffixIcon={
                             <CaretDownOutlined
                                 style={dropdownIconStyle}
                             />
                         }
+                        onChange={(e) => { setActive(e) }}
                     >
-                        {activeData.map(s => (
-                            <Option key={s}>{s}</Option>
-                        ))}
+                        <Option value={null}>
+                            Tất cả
+                        </Option>
+                        <Option value={true}>
+                            Đang hoạt động
+                        </Option>
+                        <Option value={false}>
+                            Ngưng hoạt động
+                        </Option>
                     </Select>
                 </Col>
                 <Col span={4} style={{ position: 'absolute', left: 320, width: 320 }}>
@@ -116,6 +128,7 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                         size='large'
                         style={{ width: '100%', position: 'absolute', top: 34, borderRadius: 8, height: 44.15 }}
                         placeholder='Nhập từ khóa'
+                        onChange={(e) => setKeywords(e.target.value)}
                         suffix={
                             <SearchOutlined
                                 style={{ color: '#FF7506', fontSize: 20 }}
@@ -133,7 +146,13 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                     }}
                     bordered
                     columns={columns}
-                    dataSource={data}
+                    dataSource={
+                        services.map(service => ({
+                            key: service.id,
+                            ...service
+                        }))
+                    }
+                    loading={loading}
                     pagination={{ position: ["bottomRight"] }}
                 />
             </Row>

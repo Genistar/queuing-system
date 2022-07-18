@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import * as H from "history";
 export interface devicesData {
     key: string;
@@ -87,6 +88,37 @@ export interface defaultState {
     };
 }
 
+export interface defaultDeviceState {
+    loading: boolean;
+    device: deviceType | null;
+    devices: deviceType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+export interface defaultServiceState {
+    loading: boolean;
+    service: serviceType | null;
+    services: serviceType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+export interface defaultGiveNumberState {
+    loading: boolean;
+    giveNumber: giveNumberType | null;
+    giveNumbers: giveNumberType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+
 export type roleType = {
     id?: string;
     name: string;
@@ -95,6 +127,56 @@ export type roleType = {
     authorityA: string[] | undefined;
     authorityB: string[] | undefined;
     authorityC: string[] | undefined;
+};
+
+export interface Ifilter {
+    active?: boolean | null,
+    connect?: boolean | null,
+    role?: string | null,
+    keywords: string,
+    service?: string,
+    status?: string,
+    source?: string,
+}
+
+export type deviceType = {
+    id?: string;
+    deviceId: string;
+    name: string;
+    username: string;
+    password: string;
+    type: string;
+    ip: string;
+    isActive?: boolean;
+    isConnect?: boolean;
+    services: string[];
+};
+
+export type serviceType = {
+    id?: string;
+    serviceId: string;
+    name: string;
+    description: string;
+    start?: number;
+    end?: number;
+    prefix: string;
+    surfix: string;
+    reset: boolean;
+    isActive?: boolean;
+};
+
+export type giveNumberType = {
+    id?: string;
+    service: string;
+    number?: string;
+    name: string;
+    stt: number;
+    status: "waiting" | "used" | "skip";
+    source: string;
+    timeGet: Timestamp;
+    date: Timestamp;
+    phoneNumber: string;
+    email: string;
 };
 
 export interface RouteComponentProps<P> {

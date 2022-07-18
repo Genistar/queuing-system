@@ -63,13 +63,14 @@ const columns: ColumnsType<userType> = [
     },
 ];
 const AccountList: React.FC<Props> = (props: Props) => {
-    const [role, setRole] = useState(roleData[0])
+    const [role, setRole] = useState(roleData[0]);
+    const [keywords, setKeywords] = useState<string>("");
     const dispatch = useAppDispatch();
     const { authLoading, users } = useAppSelector(userSelector);
     useEffect(() => {
         console.log(users)
-        dispatch(getAll())
-    }, [])
+        dispatch(getAll({ keywords }))
+    }, [keywords])
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700, color: '#ff7506' }}>
@@ -110,6 +111,7 @@ const AccountList: React.FC<Props> = (props: Props) => {
                                         style={{ color: '#FF7506', fontSize: 20 }}
                                     />
                                 }
+                                onChange={(e) => { setKeywords(e.target.value) }}
                             />
                         </Col>
                     </Col>

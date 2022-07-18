@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Badge, Card, Col, DatePicker, Form, Input, Row, Select, Table, Typography } from 'antd'
 import { CaretDownOutlined, SearchOutlined, EditOutlined, RollbackOutlined } from '@ant-design/icons';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from '../ServiceList/Style'
@@ -8,6 +8,8 @@ import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { numberData } from '../../../../constants/interface';
 import { ColumnsType } from 'antd/lib/table';
 import { Link, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import serviceReducer, { get, serviceSelector } from '../../serviceSlice';
 const { Title, Text } = Typography;
 type QuizParams = {
     key: string;
@@ -19,6 +21,11 @@ interface Props {
 const ServiceDetail: React.FC<Props> = (props: Props) => {
     const { data } = props;
     let { key } = useParams<QuizParams>();
+    const dispatch = useAppDispatch();
+    const { service } = useAppSelector(serviceSelector);
+    useEffect(() => {
+        dispatch(get(key))
+    }, [key])
     const columns: ColumnsType<numberData> = [
         {
             title: 'Số thứ tự',
@@ -53,21 +60,21 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                                 name='serviceId'
                                 label='Mã dịch vụ'
                             >
-                                200
+                                {service?.serviceId}
                             </Form.Item>
                             <Form.Item
                                 name='serviceName'
                                 label='Tên dịch vụ'
                                 style={{ marginTop: -10 }}
                             >
-                                HDGHGDHJ
+                                {service?.name}
                             </Form.Item>
                             <Form.Item
                                 name='decriptionService'
                                 label='Mô tả'
                                 style={{ marginTop: -10 }}
                             >
-                                HDGHGDHJ
+                                {service?.description}
                             </Form.Item>
                         </Form>
                         <Title level={4} style={{ top: 190 }}>
@@ -77,28 +84,37 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                             <Form.Item
                                 label='Tăng tự động từ:'
                             >
-                                <Input style={{ width: 64 }}>
-                                </Input>
+                                <Input style={{ width: 64 }} value={service?.start} />
+
                                 <Text style={{ fontWeight: 600, position: 'absolute', left: 70, top: 5, fontSize: 16 }}>đến</Text>
                                 <Input
-                                    style={{ left: 40, width: 64 }}>
-                                </Input>
+                                    style={{ left: 40, width: 64 }}
+                                    value={service?.end}
+                                />
+
                             </Form.Item>
                             <Form.Item
                                 label='Prefix:'
                             >
                                 <Input
-                                    style={{ left: 72, width: 64 }}>
-                                </Input>
+                                    style={{ left: 72, width: 64 }}
+                                    value={service?.prefix}
+                                />
+
+
                             </Form.Item>
                             <Form.Item
                                 label='Surfix:'
                             >
                                 <Input
-                                    style={{ left: 72, width: 64 }}>
-                                </Input>
+                                    style={{ left: 72, width: 64 }}
+                                    value={service?.surfix}
+                                />
+
                             </Form.Item>
-                            <Text style={{ fontWeight: 600, fontSize: 16 }}>Reset theo ngày</Text>
+                            <Text style={{ fontWeight: 600, fontSize: 16 }}>
+                                {service?.reset === true ? 'Reset theo ngày' : ''}
+                            </Text>
                         </Form>
                     </Card>
                 </Col>

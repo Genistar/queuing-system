@@ -10,18 +10,14 @@ var logo = require('../../../assets/Logo-removebg-preview.png')
 
 const { Sider, Header, Content, Footer } = Layout
 interface Props {
-    onLogin: (user: string, pwd: string) => void;
-    user: {}
 }
 const LoginPage: React.FC<Props> = (props: Props): JSX.Element => {
-    const { onLogin, user } = props;
     let history = useHistory()
     const forgotPassword = (user: string) => {
         history.push('/login/renewpassword');
         console.log(user)
         return sendPasswordResetEmail(auth, user)
     }
-    console.log(user)
     return (
         <Row>
             <Col span={10}>
@@ -40,7 +36,7 @@ const LoginPage: React.FC<Props> = (props: Props): JSX.Element => {
                         style={{ marginLeft: '1%', minWidth: '400px' }}
                     >
                         <Route path='/login' exact={true}>
-                            <LoginForm onLogin={onLogin} />
+                            <LoginForm />
                         </Route>
                         <Route path="/login/forgetpassword">
                             <ForgetPassword forgotPassword={forgotPassword} />

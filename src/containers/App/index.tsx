@@ -12,29 +12,6 @@ import store from '../../store';
 
 
 const App = () => {
-    const [user, setUser] = useState({});
-    let history = useHistory();
-    const onLogin = async (user: string, pwd: string) => {
-        try {
-            const u: UserCredential = await signInWithEmailAndPassword(
-                auth,
-                user,
-                pwd
-            )
-            console.log(user, pwd)
-            console.log(u)
-            return <Redirect to='admin' />
-        } catch (error: any) {
-            console.log(error.message)
-        }
-    }
-    onAuthStateChanged(auth, (currentUser: any) => {
-        setUser(currentUser)
-    })
-    const onLogout = async () => {
-        await signOut(auth);
-        console.log('user')
-    };
 
     return (
         <Router>
@@ -44,9 +21,9 @@ const App = () => {
                         <NotFound />
                     </Route>
                     <Route path='/login'>
-                        <LoginPage onLogin={onLogin} user={user} />
+                        <LoginPage />
                     </Route>
-                    <LayoutPage onLogout={onLogout} user={user} />
+                    <LayoutPage />
                 </Switch>
             </Provider>
         </Router>

@@ -1,7 +1,7 @@
 import React from "react"
 
 export const diagramStyle: React.CSSProperties = {
-    marginTop: -100,
+    marginTop: -120,
 }
 export const cardStyle: React.CSSProperties = {
     position: 'absolute',

@@ -1,30 +1,43 @@
 import { Button, Form, Input } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { load, login, userSelector } from '../../../../SystemSetting/Account/userSlice';
 
-
+interface loginform {
+    username: string;
+    password: string;
+}
 type Props = {
-    onLogin: (user: string, pwd: string) => void
 }
 const LoginForm: React.FC<Props> = (props: Props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [form] = Form.useForm()
     const history = useHistory()
-    const { onLogin } = props;
-    const onHandleLogin = async (e: any) => {
-        try {
-            e.preventDefault();
-            onLogin(username, password)
-            history.push('/admin')
-        } catch (error: any) {
-            console.log(error.message)
+    const dispatch = useAppDispatch();
+    const { authLoading, message, userLogin } = useAppSelector(userSelector);
+    const onHandleLogin = (e: any) => {
+        const value = {
+            username: username,
+            password: password
         }
-
+        dispatch(login(value)).then(() => dispatch(load()));
+        console.log(value)
     }
+    useEffect(() => {
+        dispatch(load())
+    }, []);
+
+    useEffect(() => {
+        if (userLogin) {
+            history.push("/admin/dashboard");
+        }
+    }, [userLogin]);
     return (
         <Form
-            name="basic"
+            name="login"
             wrapperCol={{
                 span: 16,
             }}
@@ -34,6 +47,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
             autoComplete="off"
             layout='vertical'
             style={{ width: '100%', marginLeft: '16%', marginTop: '8%' }}
+            form={form}
         >
             <Form.Item
                 name="username"
@@ -46,7 +60,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
             >
                 <label style={{ fontSize: '18px' }}>Tên đăng nhập *</label>
                 <Input
-                    name='username' size='large' placeholder="input username" style={{ borderRadius: '6px', marginTop: '10px', height: '44px' }}
+                    size='large' placeholder="input username" style={{ borderRadius: '6px', marginTop: '10px', height: '44px' }}
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </Form.Item>
@@ -63,7 +77,6 @@ const LoginForm: React.FC<Props> = (props: Props) => {
             >
                 <label style={{ fontSize: '18px' }}>Mật khẩu *</label>
                 <Input.Password
-                    name='password'
                     size='large'
                     placeholder="input password"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
@@ -94,7 +107,8 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                     htmlType="submit"
                     size='large'
                     style={{ backgroundColor: '#FF9138', borderRadius: '10px', width: '30%', fontSize: '16px', marginTop: '-10px' }}
-                    onClick={(e) => onHandleLogin(e)}
+                    loading={authLoading}
+                    onClick={onHandleLogin}
                 >
                     Đăng nhập
                 </Button>

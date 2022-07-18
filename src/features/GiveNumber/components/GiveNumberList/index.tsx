@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { giveNumberData } from '../../../../constants/interface'
+import { giveNumberData, giveNumberType } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import './Style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { getAll, giveNumberSelector } from '../../giveNumberSlice';
+import moment from 'moment';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -19,11 +22,11 @@ interface Props {
 const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động'];
 const serviceData = ['Tất cả', 'Rặng hàm mặt', 'Khoa sản', 'Phụ sản'];
 const nguonCapData = ['Tất cả', 'Kiosk']
-const columns: ColumnsType<giveNumberData> = [
+const columns: ColumnsType<giveNumberType> = [
     {
         title: 'STT',
-        dataIndex: 'key',
-        key: 'key'
+        dataIndex: 'stt',
+        key: 'stt'
     },
     {
         title: 'Tên khách hàng',
@@ -32,49 +35,54 @@ const columns: ColumnsType<giveNumberData> = [
     },
     {
         title: 'Tên dịch vụ',
-        dataIndex: 'serviceName',
-        key: 'serviceName',
+        dataIndex: 'service',
+        key: 'service',
     },
     {
         title: 'Thời gian cấp',
-        dataIndex: 'date',
-        key: 'date',
+        dataIndex: 'time',
+        key: 'time',
     },
     {
         title: 'Hạn sử dụng',
-        dataIndex: 'hsd',
-        key: 'hsd',
+        dataIndex: 'dat',
+        key: 'dat',
     },
     {
         title: 'Trạng thái',
-        dataIndex: 'active',
-        key: 'active',
+        dataIndex: 'status',
+        key: 'status',
         render: (dataIndex) => (
             <span>
-                <Badge status={dataIndex === true ? 'success' : 'warning'} />
-                {dataIndex}
+                <Badge status={dataIndex === 'waiting' ? 'processing' : (dataIndex === 'used' ? 'default' : 'warning')} />
+                {dataIndex === 'waiting' ? 'Đang chờ' : (dataIndex === 'used' ? 'Đã sử dụng' : 'Bỏ qua')}
             </span>
         ),
     },
     {
         title: 'Nguồn cấp',
-        dataIndex: 'nguoncap',
-        key: 'nguoncap'
+        dataIndex: 'source',
+        key: 'source'
     },
     {
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Link to={`/admin/givenumber/detail/${record.key}`}>Chi tiết</Link>
+                <Link to={`/admin/givenumber/detail/${record.id}`}>Chi tiết</Link>
             </Space>
         ),
     },
 ];
 const GiveNumberList: React.FC<Props> = (props: Props) => {
-    const [active, setActive] = useState<String>(activeData[0]);
-    const [service, setService] = useState<String>(serviceData[0]);
-    const [nguonCap, setNguonCap] = useState<String>(nguonCapData[0]);
-    const { data } = props;
+    const [active, setActive] = useState<string>(activeData[0]);
+    const [service, setService] = useState<string>(serviceData[0]);
+    const [nguonCap, setNguonCap] = useState<string>(nguonCapData[0]);
+    const [keywords, setKeywords] = useState<string>("");
+    const dispatch = useAppDispatch();
+    const { loading, giveNumbers } = useAppSelector(giveNumberSelector)
+    useEffect(() => {
+        dispatch(getAll({ keywords }))
+    }, [keywords])
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -169,12 +177,25 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                                 style={{ color: '#FF7506', fontSize: 20 }}
                             />
                         }
+                        onChange={(e) => setKeywords(e.target.value)}
                     />
                 </Col>
             </Row>
             <Row>
                 <Table
-                    dataSource={data}
+                    dataSource={
+                        giveNumbers.map(giveNumber => ({
+                            key: giveNumber.number,
+                            time: moment(
+                                giveNumber.timeGet.toDate()
+                            ).format("HH:mm - DD/MM/YYYY"),
+                            dat: moment(
+                                giveNumber.date.toDate()
+                            ).format("HH:mm - DD/MM/YYYY"),
+                            ...giveNumber
+                        }))
+                    }
+                    loading={loading}
                     columns={columns}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{

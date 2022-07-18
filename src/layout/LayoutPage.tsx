@@ -17,67 +17,60 @@ var logo = require('../assets/Logo-removebg-preview.png')
 const { Header, Footer, Sider, Content } = Layout;
 
 interface Props {
-    onLogout: () => Promise<void>;
-    user: {}
 }
 const LayoutPage: React.FC<Props> = (props: Props): JSX.Element => {
     const history = useHistory();
-    const { onLogout, user } = props
     const onHandleClick = () => {
         history.push('/admin')
         window.location.reload()
     }
-    if (!user) {
-        return <Redirect to='/login' />
-    } else {
-        return (
-            <Layout style={{
-                minHeight: '100vh',
-            }}>
-                <Sider style={{ backgroundColor: '#fff' }}>
-                    <Link to='/admin' onClick={onHandleClick}>
-                        <img src={logo} alt="" className='logo' />
-                    </Link>
+    return (
+        <Layout style={{
+            minHeight: '100vh',
+        }}>
+            <Sider style={{ backgroundColor: '#fff' }}>
+                <Link to='/admin' onClick={onHandleClick}>
+                    <img src={logo} alt="" className='logo' />
+                </Link>
 
-                    <MenuBar />
-                    <h3 style={{ textAlign: 'center', marginTop: '100%' }} onClick={onLogout}>Đăng xuất</h3>
-                </Sider>
-                <Layout className="site-layout">
-                    <Header
-                        style={{
-                            padding: 0,
-                            backgroundColor: '#f0f2f5',
-                        }}
-                    >
-                        <TopBar />
-                    </Header>
-                    <Content style={{
-                        margin: '10% 4%'
-                    }}>
-                        <div>
-                            <Route path="/admin">
-                                <HomePage></HomePage>
-                            </Route>
-                            <Route path='/admin/dashboard'>
-                                <DashBoard />
-                            </Route>
-                            <Route path='/admin/userdetail'>
-                                <DetailUserPage />
-                            </Route>
-                            <DevicesPage />
-                            <ServicePage />
-                            <GiveNumberPage />
-                            <ReportPage />
-                            <RolePage />
-                            <AccountPage />
-                            <DairyPage />
-                        </div>
-                    </Content>
+                <MenuBar />
+                <h3 style={{ textAlign: 'center', marginTop: '100%' }}>Đăng xuất</h3>
+            </Sider>
+            <Layout className="site-layout">
+                <Header
+                    style={{
+                        padding: 0,
+                        backgroundColor: '#f0f2f5',
+                    }}
+                >
+                    <TopBar />
+                </Header>
+                <Content style={{
+                    margin: '10% 4%'
+                }}>
+                    <div>
+                        <Route path="/admin" exact={true}>
+                            <HomePage></HomePage>
+                        </Route>
+                        <Route path='/admin/dashboard'>
+                            <DashBoard />
+                        </Route>
+                        <Route path='/admin/userdetail'>
+                            <DetailUserPage />
+                        </Route>
+                        <DevicesPage />
+                        <ServicePage />
+                        <GiveNumberPage />
+                        <ReportPage />
+                        <RolePage />
+                        <AccountPage />
+                        <DairyPage />
+                    </div>
+                </Content>
 
-                </Layout>
             </Layout>
-        )
-    }
+        </Layout>
+    )
 
 }
 

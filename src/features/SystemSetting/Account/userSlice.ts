@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
-import { defaultState, roleType, userType } from '../../../constants/interface';
+import { defaultState, Ifilter, roleType, userType } from '../../../constants/interface';
 import { RootState } from '../../../store';
 
 const initialState: defaultState = {
@@ -16,23 +16,76 @@ const initialState: defaultState = {
     },
 };
 
-export const getAll = createAsyncThunk("user/getAll", async () => {
-    let users: userType[] = [];
-
-    const queryUser = await getDocs(collection(db, "user"));
-    queryUser.forEach((value) => {
-        users.push({
-            id: value.id,
-            ...(value.data() as userType),
+export const login = createAsyncThunk(
+    "user/login",
+    async ({ username, password }: { username: string; password: string }) => {
+        let id = null;
+        const usersRef = collection(db, "user");
+        const querySnapshot = await getDocs(
+            query(
+                usersRef,
+                where("username", "==", username),
+                where("password", "==", password)
+            )
+        );
+        querySnapshot.forEach((doc) => {
+            id = doc.id;
+            localStorage.setItem("userId", doc.id);
         });
-    });
-    // for (const user of users) {
-    //     const roleSnap = await getDoc(doc(db, "roles", user.role as string));
-    //     user.role = (roleSnap.data() as roleType).name;
-    // }
-    users.reverse();
-    return users;
+        return id;
+    }
+);
+
+export const load = createAsyncThunk("user/load", async () => {
+    let user: userType;
+    let id = localStorage.getItem("userId");
+    const usersRef = doc(db, "user", id as string);
+
+    const userSnap = await getDoc(usersRef);
+    user = {
+        id: userSnap.id,
+        ...(userSnap.data() as userType),
+    };
+    return user;
 });
+
+export const getAll = createAsyncThunk("user/getAll",
+    async (filter?: Ifilter) => {
+        let users: userType[] = [];
+
+        const queryUser = await getDocs(collection(db, "user"));
+        queryUser.forEach((value) => {
+            users.push({
+                id: value.id,
+                ...(value.data() as userType),
+            });
+        });
+        if (filter) {
+            if (filter.active != null)
+                users = users.filter(
+                    (user) => user.role == filter.role
+                );
+            if (filter.keywords != "")
+                users = users.filter(
+                    (user) =>
+                        user.email
+                            .toLowerCase()
+                            .includes(filter.keywords?.toLowerCase()) ||
+                        user.name
+                            .toLowerCase()
+                            .includes(filter.keywords.toLowerCase()) ||
+                        user.username
+                            .toLowerCase()
+                            .includes(filter.keywords.toLowerCase())
+                );
+        }
+        // for (const user of users) {
+        //     const roleSnap = await getDoc(doc(db, "roles", user.role as string));
+        //     user.role = (roleSnap.data() as roleType).name;
+        // }
+        users.reverse();
+        return users;
+    });
 
 export const add = createAsyncThunk(
     "user/add",
@@ -66,13 +119,45 @@ export const update = createAsyncThunk(
     }
 );
 
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-
+        logout(state) {
+            localStorage.removeItem("userId");
+            state.userLogin = null;
+        },
     },
     extraReducers: (builder) => {
+        builder.addCase(login.pending, (state, action) => {
+            state.authLoading = true;
+        });
+        builder.addCase(login.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.message.fail = false;
+                state.message.text = "Đăng nhập thành công";
+            } else {
+                state.message.fail = true;
+                state.message.text = "Sai mật khẩu hoặc tên đăng nhập";
+            }
+            state.authLoading = false;
+        });
+        builder.addCase(load.pending, (state, action) => {
+            state.authLoading = true;
+        });
+        builder.addCase(load.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.userLogin = action.payload;
+            } else {
+                state.userLogin = null;
+            }
+            state.authLoading = false;
+        });
+        builder.addCase(load.rejected, (state, action) => {
+            state.userLogin = null;
+            state.authLoading = false;
+        });
         builder.addCase(getAll.pending, (state, action) => {
             state.authLoading = true;
         });
@@ -122,7 +207,6 @@ const userSlice = createSlice({
             state.message.text = action.error.message;
             state.authLoading = false;
         });
-
     }
 })
 const userReducer = userSlice.reducer;
