@@ -8,8 +8,11 @@ import { useHistory } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { userType } from '../../../../../constants/interface';
 import { add, get, update, userSelector } from '../../userSlice'
+import { add as addDiary } from '../../../DairyUser/diarySlice'
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { Timestamp } from 'firebase/firestore';
+import { getAll, roleSelector } from '../../../Role/roleSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
@@ -35,9 +38,14 @@ const AccountAction: React.FC<Props> = (props: Props) => {
     const [form] = Form.useForm()
     const dispatch = useAppDispatch();
     const { user } = useAppSelector(userSelector);
+    const { userLogin } = useAppSelector(userSelector);
+    const { roles } = useAppSelector(roleSelector)
     const onBack = () => {
         history.goBack()
     }
+    useEffect(() => {
+        dispatch(getAll())
+    }, [])
     useEffect(() => {
         form.setFieldsValue({
             ...user,
@@ -65,6 +73,12 @@ const AccountAction: React.FC<Props> = (props: Props) => {
             dispatch(add(user)).then((data) => {
                 if (data.meta.requestStatus === 'fulfilled') {
                     notice.success('Thêm thành công', 3)
+                    dispatch(addDiary({
+                        username: userLogin ? userLogin.username : '',
+                        ip: '192.168.1.1',
+                        action: `Thêm người dùng ${user.name}`,
+                        time: Timestamp.fromDate(new Date())
+                    }))
                 } else {
                     notice.success('Đã xảy ra lỗi', 3)
                 }
@@ -79,6 +93,12 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                 if (data.meta.requestStatus === 'fulfilled') {
                     dispatch(get(key))
                     notice.success('Cập nhật thành công', 3)
+                    dispatch(addDiary({
+                        username: userLogin ? userLogin.username : '',
+                        ip: '192.168.1.1',
+                        action: `Cập nhật người dùng ${user.name}`,
+                        time: Timestamp.fromDate(new Date())
+                    }))
                 } else {
                     notice.success('Đã xảy ra lỗi', 3)
                 }
@@ -152,8 +172,8 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                                 onChange={(e) => setRole(e)}
                                 style={{ height: 44.15 }}
                             >
-                                {roleData.map((role) => (
-                                    <Option key={role} value={role}>{role}</Option>
+                                {roles.map((role) => (
+                                    <Option key={role.id} value={role.name}>{role.name}</Option>
                                 ))}
                             </Select>
                         </Form.Item>

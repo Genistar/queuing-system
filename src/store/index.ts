@@ -5,13 +5,17 @@ import userReducer from '../features/SystemSetting/Account/userSlice';
 import deviceReducer from "../features/Devices/deviceSlice";
 import serviceReducer from "../features/Service/serviceSlice";
 import giveNumberReducer from "../features/GiveNumber/giveNumberSlice";
+import diaryReducer from "../features/SystemSetting/DairyUser/diarySlice";
+import roleReducer from "../features/SystemSetting/Role/roleSlice";
 
 const store = configureStore({
     reducer: {
         userReducer,
         deviceReducer,
         serviceReducer,
-        giveNumberReducer
+        giveNumberReducer,
+        diaryReducer,
+        roleReducer
     }
 })
 

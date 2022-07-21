@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { accountData, userType } from '../../../../../constants/interface';
+import { userType } from '../../../../../constants/interface';
 import { userSelector, getAll } from '../../userSlice';
 import 'antd/dist/antd.css';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { roleSelector } from '../../../Role/roleSlice';
+import { getAll as getRoles } from '../../../Role/roleSlice'
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
 }
-const roleData = ['Tất cả', 'Kế toán', 'Thu ngân', 'Quản lý']
 const columns: ColumnsType<userType> = [
     {
         title: 'Tên đăng nhập',
@@ -63,14 +64,18 @@ const columns: ColumnsType<userType> = [
     },
 ];
 const AccountList: React.FC<Props> = (props: Props) => {
-    const [role, setRole] = useState(roleData[0]);
+    const [role, setRole] = useState(null);
     const [keywords, setKeywords] = useState<string>("");
     const dispatch = useAppDispatch();
     const { authLoading, users } = useAppSelector(userSelector);
+    const { roles } = useAppSelector(roleSelector);
+    useEffect(() => {
+        dispatch(getRoles())
+    }, [])
     useEffect(() => {
         console.log(users)
-        dispatch(getAll({ keywords }))
-    }, [keywords])
+        dispatch(getAll({ keywords, role }))
+    }, [keywords, role])
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700, color: '#ff7506' }}>
@@ -90,10 +95,13 @@ const AccountList: React.FC<Props> = (props: Props) => {
                                     style={dropdownIconStyle}
                                 />
                             }
+                            defaultValue={null}
                             style={{ height: 44.15, width: 300, marginTop: -5 }}
+                            onChange={(e) => setRole(e)}
                         >
-                            {roleData.map((role) => (
-                                <Option key={role} value={role}>{role}</Option>
+                            <Option value={null}>Tất cả</Option>
+                            {roles.map((role) => (
+                                <Option key={role.id} value={role.name}>{role?.name}</Option>
                             ))}
                         </Select>
                     </Form.Item>

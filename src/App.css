@@ -157,8 +157,9 @@ body{
 .ant-select-dropdown {
   border-radius: 8px;
   font-size: 16px;
-  height: 152px;
   padding-top: 10px;
+  overflow-y: scroll;
+  height: 145px;
 }
 .ant-select-item {
   align-items: center;
@@ -177,4 +178,23 @@ body{
   color: rgba(255, 255, 255, 0.85);
   font-weight: 600;
   background-color:#FF7506;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FF9138; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ff7506; 
 }

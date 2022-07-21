@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
-import { Card, Col, Typography, Form, Input, Button, Checkbox } from 'antd'
-import { buttonAddstyle, buttonCancelstyle, formLeftStyle, inputStyle, titlePageStyle as T }
+import React, { useEffect, useState } from 'react'
+import { Card, Col, Typography, Form, Input, Button, Checkbox, Row, message as notice } from 'antd'
+import { buttonAddstyle, buttonCancelstyle, inputStyle, titlePageStyle as T }
     from '../../../../Devices/components/DevicesAction/Style';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { titlePageStyle } from '../../../../Devices/components/DevicesList/Style';
+import { roleType } from '../../../../../constants/interface';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { addRole, roleSelector } from '../../roleSlice';
+import { add } from '../../../DairyUser/diarySlice';
+import { userSelector } from '../../../Account/userSlice';
+import { Timestamp } from 'firebase/firestore';
 const { Title } = Typography;
 type QuizParams = {
     key: string;
@@ -15,11 +21,55 @@ type Props = {}
 const RoleAction: React.FC = (props: Props) => {
     let history = useHistory();
     let { key } = useParams<QuizParams>();
+    const [form] = Form.useForm()
+    const dispatch = useAppDispatch();
+    const { userLogin } = useAppSelector(userSelector);
+    const { loading, role } = useAppSelector(roleSelector)
+
+    useEffect(() => {
+        if (key) {
+            form.setFieldsValue(role)
+        }
+
+    }, [role])
+
     const onBack = () => {
         history.goBack()
     }
+    const onAddRole = (value: roleType) => {
+        if (!key) {
+            dispatch(
+                addRole({
+                    ...value,
+                    authorityA: value.authorityA ? value.authorityA : [],
+                    authorityB: value.authorityB ? value.authorityB : [],
+                    authorityC: value.authorityC ? value.authorityC : [],
+                })
+            ).then((data) => {
+                if (data.meta.requestStatus == "fulfilled") {
+                    notice.success("Thêm thành công", 3);
+                    history.goBack()
+                    dispatch(
+                        add({
+                            username: userLogin ? userLogin.username : '',
+                            ip: "127.0.0.1",
+                            action: "Thêm vai trò ",
+                            time: Timestamp.fromDate(new Date()),
+                        })
+                    );
+                } else {
+                    notice.error("Đã xảy ra lỗi", 3);
+                }
+            });
+        }
+
+    }
     return (
-        <div>
+        <Form
+            layout='vertical'
+            form={form}
+            onFinish={onAddRole}
+        >
             <Title level={3} style={titlePageStyle}>
                 Danh sách vai trò
             </Title>
@@ -27,83 +77,104 @@ const RoleAction: React.FC = (props: Props) => {
                 <Title level={4} style={T}>
                     Thông tin vai trò
                 </Title>
-                <Col span={6}>
-                    <Form layout='vertical' style={formLeftStyle}>
+                <Row >
+                    <Col span={6} style={{ height: 76, width: 540, top: 46, left: 24, position: 'absolute' }}>
                         <Form.Item
-                            name='serviceId'
+                            name='name'
                             label='Tên vai trò'
-                            rules={[{ required: true }]}>
+                            rules={[{ required: true }]}
+                            style={{ width: 540 }}
+                        >
                             <Input
-                                name='devicesId'
                                 style={inputStyle}
-                                placeholder='Nhập mã dịch vụ'
+                                placeholder='Nhập tên vai trò'
                             />
                         </Form.Item>
                         {/* <Form layout='vertical' style={{ left: 556, height: 164, position: 'absolute', width: 553, top: 36 }}> */}
                         <Form.Item
-                            name='serviceDecription'
+                            name='description'
                             label='Mô tả dịch vụ'
                             rules={[{ required: true }]}
+                            style={{ width: 540 }}
                         >
-                            <Input.TextArea style={{ height: 132, width: 553, borderRadius: 8 }}>
+                            <Input.TextArea style={{ height: 132, borderRadius: 8 }}>
                             </Input.TextArea>
                         </Form.Item>
-                    </Form>
-                </Col>
-                <Col span={6}>
-                    <Form layout='vertical' style={{ position: 'absolute', left: 588, width: 504 }} >
+
+                    </Col>
+                    <Col span={6} style={{ position: 'absolute', left: 588, top: 40, width: 504 }}>
                         <Form.Item label='Phân quyền chức năng'>
                             <Card
                                 style={{
                                     width: 560, height: 420,
                                     position: 'absolute', top: -8,
-                                    backgroundColor: '#FFF2E7'
+                                    backgroundColor: '#FFF2E7',
+                                    overflowY: 'scroll'
                                 }}
                             >
-                                <Title level={4} style={{ position: 'absolute', top: 16, left: 24 }}>Nhóm chức năng A</Title>
-                                <Form.Item style={{ marginTop: 30 }}>
+                                <Col style={{ top: 35 }}>
+                                    <Title level={4} style={{ position: 'absolute', top: -40, left: 0 }}>Nhóm chức năng A</Title>
                                     <Checkbox >Tất cả</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng x</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng y</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng z</Checkbox>
-                                </Form.Item>
-                                <Title level={4} style={{ position: 'absolute', top: 195, left: 24 }}>Nhóm chức năng B</Title>
-                                <Form.Item style={{ marginTop: 60 }}>
+                                    <Form.Item name='authorityA' style={{ marginTop: 10 }}>
+                                        <Checkbox.Group>
+                                            <Checkbox value='cnax'>Chức năng x</Checkbox>
+                                            <Checkbox value='cnay' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng y</Checkbox>
+                                            <Checkbox value='cnbz' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng z</Checkbox>
+                                        </Checkbox.Group>
+
+                                    </Form.Item>
+                                </Col>
+
+                                <Col style={{ top: 75 }}>
+                                    <Title level={4} style={{ position: 'absolute', top: -40, left: 0 }}>Nhóm chức năng B</Title>
                                     <Checkbox >Tất cả</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng x</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng y</Checkbox>
-                                </Form.Item>
-                                <Form.Item style={{ marginTop: -25 }}>
-                                    <Checkbox >Chức năng z</Checkbox>
-                                </Form.Item>
+                                    <Form.Item name='authorityB' style={{ marginTop: 10 }}>
+                                        <Checkbox.Group>
+                                            <Checkbox value='cnbx'>Chức năng x</Checkbox>
+                                            <Checkbox value='cnby' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng y</Checkbox>
+                                            <Checkbox value='cnbz' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng z</Checkbox>
+                                        </Checkbox.Group>
+
+                                    </Form.Item>
+                                </Col>
+                                <Col style={{ top: 110 }}>
+                                    <Title level={4} style={{ position: 'absolute', top: -40, left: 0 }}>Nhóm chức năng C</Title>
+                                    <Checkbox >Tất cả</Checkbox>
+                                    <Form.Item name='authorityC' style={{ marginTop: 10 }}>
+                                        <Checkbox.Group>
+                                            <Checkbox value='cnbx' style={{ marginTop: 0 }}>Chức năng x</Checkbox>
+                                            <Checkbox value='cnby' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng y</Checkbox>
+                                            <Checkbox value='cnbz' style={{ display: 'flex', marginLeft: 0, marginTop: 10 }}>Chức năng z</Checkbox>
+                                        </Checkbox.Group>
+
+                                    </Form.Item>
+                                </Col>
                             </Card>
 
                         </Form.Item>
 
-                    </Form>
 
-
-                </Col>
+                    </Col>
+                </Row>
             </Card>
-            <Form layout='inline' style={{ top: 680, left: 634.5, position: 'absolute' }}>
-                <Form.Item>
+            <Row style={{ top: 680, left: 634.5, position: 'absolute' }}>
+                <Col span={6}>
                     <Button style={buttonCancelstyle} onClick={onBack}>Hủy</Button>
-                </Form.Item>
-                <Form.Item>
-                    <Button style={buttonAddstyle}>{key ? 'Cập nhật' : 'Thêm dịch vụ'}</Button>
-                </Form.Item>
-            </Form>
-        </div >
+                </Col>
+                <Col span={6}>
+                    <Button
+                        style={{
+                            width: 147, height: 48, backgroundColor: '#ff7506', color: '#fff', padding: '10px 24px', borderRadius: 8, fontWeight: 700,
+                            left: 80
+                        }}
+                        htmlType='submit'
+                        loading={loading}
+                    >
+                        {key ? 'Cập nhật' : 'Thêm dịch vụ'}
+                    </Button>
+                </Col>
+            </Row>
+        </Form >
     )
 }
 

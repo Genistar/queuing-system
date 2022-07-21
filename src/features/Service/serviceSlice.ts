@@ -64,6 +64,16 @@ export const get = createAsyncThunk("service/get", async (id: string) => {
 
     return service;
 });
+export const getName = createAsyncThunk('service/getName', async (serviceId: string) => {
+    let service: serviceType;
+
+    const serviceRef = doc(db, 'service', serviceId);
+    const serviceSnap = await getDoc(serviceRef);
+    service = {
+        ...(serviceSnap.data() as serviceType),
+    };
+    return service
+})
 
 export const add = createAsyncThunk(
     "service/add",

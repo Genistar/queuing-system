@@ -1,43 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Typography, Table, Card, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { dairyData } from '../../../../../constants/interface'
+import { dairyData, diaryType } from '../../../../../constants/interface'
 import 'antd/dist/antd.css';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { diarySelector, getAll } from '../../diarySlice'
+import { Timestamp } from 'firebase/firestore';
+import moment from 'moment';
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 interface Props {
     data: dairyData[]
 }
 const roleData = ['Tất cả', 'Kế toán', 'Thu ngân', 'Quản lý']
-const columns: ColumnsType<dairyData> = [
+const columns: ColumnsType<diaryType> = [
     {
         title: 'Tên đăng nhập',
-        dataIndex: 'userName',
-        key: 'userName'
+        dataIndex: 'username',
+        key: 'username'
     },
     {
         title: 'Thời gian tác động',
-        dataIndex: 'time',
-        key: 'time',
+        dataIndex: 'timeAction',
+        key: 'timeAction',
     },
     {
         title: 'IP thực hiện',
-        dataIndex: 'ipAddress',
-        key: 'ipAddress',
+        dataIndex: 'ip',
+        key: 'ip',
     },
     {
         title: 'Thao tác thực hiện',
-        dataIndex: 'manipulate',
-        key: 'manipulate',
+        dataIndex: 'action',
+        key: 'action',
     },
 ];
 const DairyList: React.FC<Props> = (props: Props) => {
     const { data } = props;
+    const { diaries, loading } = useAppSelector(diarySelector);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(getAll())
+    }, [])
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700, color: '#ff7506' }}>
@@ -72,7 +81,13 @@ const DairyList: React.FC<Props> = (props: Props) => {
             </Row>
             <Row>
                 <Table
-                    dataSource={data}
+                    dataSource={
+                        diaries.map(d => ({
+                            key: d.id,
+                            timeAction: moment(d?.time.toDate()).format("HH:mm - DD/MM/YYYY"),
+                            ...d
+                        }))
+                    }
                     columns={columns}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
@@ -81,6 +96,7 @@ const DairyList: React.FC<Props> = (props: Props) => {
                     }}
                     bordered
                     pagination={{ position: ["bottomRight"], pageSize: 7 }}
+                    loading={loading}
                 />
             </Row>
             <Link style={addDeviceStyle} to='/admin/account/add'>

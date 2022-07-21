@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
-import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { roleData } from '../../../../../constants/interface'
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
+import { roleData, roleType } from '../../../../../constants/interface'
 import 'antd/dist/antd.css';
-import { titlePageStyle } from '../../../../GiveNumber/components/GiveNumberList/Style';
-import { textStyle } from '../../../../Service/components/ServiceList/Style';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { getAll, roleSelector } from '../../roleSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -15,35 +15,39 @@ interface Props {
     data: roleData[]
 }
 
-const columns: ColumnsType<roleData> = [
+const columns: ColumnsType<roleType> = [
     {
         title: 'Tên vai trò',
-        dataIndex: 'roleName',
-        key: 'roleName'
+        dataIndex: 'name',
+        key: 'name'
     },
     {
         title: 'Số người dùng',
-        dataIndex: '',
-        key: '',
+        dataIndex: 'amountOfUser',
+        key: 'amountOfUser',
     },
     {
         title: 'Mô tả',
-        dataIndex: 'roleDecription',
-        key: 'roleDecription',
+        dataIndex: 'description',
+        key: 'description',
     },
     {
         key: 'action',
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/role/update/${record.key}`}>Cập nhật</Link>
+                    <Link to={`/admin/role/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
     },
 ];
 const RoleList: React.FC<Props> = (props: Props) => {
-    const { data } = props;
+    const { roles, loading } = useAppSelector(roleSelector);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(getAll())
+    }, [])
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 114, fontWeight: 700, color: '#ff7506' }}>
@@ -70,7 +74,12 @@ const RoleList: React.FC<Props> = (props: Props) => {
             </Row>
             <Row>
                 <Table
-                    dataSource={data}
+                    dataSource={
+                        roles.map(role => ({
+                            ...role,
+                            amountOfUser: role.amountOfUser
+                        }))
+                    }
                     columns={columns}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
@@ -78,6 +87,7 @@ const RoleList: React.FC<Props> = (props: Props) => {
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
+                    loading={loading}
                     pagination={{ position: ["bottomRight"], pageSize: 7 }}
                 />
             </Row>

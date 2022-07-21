@@ -112,6 +112,26 @@ export interface defaultGiveNumberState {
     loading: boolean;
     giveNumber: giveNumberType | null;
     giveNumbers: giveNumberType[];
+    giveNumbersFilter: giveNumberType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+export interface defaultDiaryState {
+    loading: boolean;
+    diaries: diaryType[];
+    message: {
+        fail: boolean;
+        text: string | undefined;
+    };
+}
+
+export interface defaultRoleState {
+    loading: boolean;
+    role: roleType | null;
+    roles: roleType[];
     message: {
         fail: boolean;
         text: string | undefined;
@@ -124,9 +144,9 @@ export type roleType = {
     name: string;
     description: string;
     amountOfUser?: number;
-    authorityA: string[] | undefined;
-    authorityB: string[] | undefined;
-    authorityC: string[] | undefined;
+    authorityA?: string[] | undefined;
+    authorityB?: string[] | undefined;
+    authorityC?: string[] | undefined;
 };
 
 export interface Ifilter {
@@ -134,9 +154,9 @@ export interface Ifilter {
     connect?: boolean | null,
     role?: string | null,
     keywords: string,
-    service?: string,
-    status?: string,
-    source?: string,
+    service?: string | null,
+    status?: string | null,
+    source?: string | null,
 }
 
 export type deviceType = {
@@ -167,7 +187,8 @@ export type serviceType = {
 
 export type giveNumberType = {
     id?: string;
-    service: string;
+    service: string | undefined;
+    serviceName: string | undefined;
     number?: string;
     name: string;
     stt: number;
@@ -178,6 +199,15 @@ export type giveNumberType = {
     phoneNumber: string;
     email: string;
 };
+
+export type diaryType = {
+    id?: string;
+    username: string;
+    ip: string;
+    action: string;
+    time: Timestamp;
+};
+
 
 export interface RouteComponentProps<P> {
     match: match<P>;

@@ -9,6 +9,9 @@ import { devicesData, serviceType } from '../../../../constants/interface';
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { add, get, serviceSelector, update } from '../../serviceSlice';
+import { add as addDiary } from '../../../SystemSetting/DairyUser/diarySlice'
+import { userSelector } from '../../../SystemSetting/Account/userSlice';
+import { Timestamp } from 'firebase/firestore';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
@@ -26,16 +29,20 @@ const ServiceAction: React.FC = (props: Props) => {
     const [reset, setReset] = useState<boolean>(false);
     const [form] = Form.useForm()
     const dispatch = useAppDispatch();
-    const { service } = useAppSelector(serviceSelector)
+    const { service } = useAppSelector(serviceSelector);
+    const { userLogin } = useAppSelector(userSelector)
 
     useEffect(() => {
-        form.setFieldsValue({
-            ...service
-        })
-        setIncrease(service?.start != null && service.end != null ? true : false)
-        setPrefix(service?.prefix !== null ? true : false)
-        setSurfix(service?.surfix !== null ? true : false)
-        setReset(service?.reset === true ? true : false)
+        if (key) {
+            form.setFieldsValue({
+                ...service
+            })
+            setIncrease(service?.start != null && service.end != null ? true : false)
+            setPrefix(service?.prefix !== null ? true : false)
+            setSurfix(service?.surfix !== null ? true : false)
+            setReset(service?.reset === true ? true : false)
+        }
+
     }, [service])
     useEffect(() => {
         if (key) {
@@ -62,9 +69,22 @@ const ServiceAction: React.FC = (props: Props) => {
                 (data) => {
                     if (data.meta.requestStatus === 'fulfilled') {
                         notice.success('Thêm thành công ', 3);
+                        dispatch(addDiary({
+                            username: userLogin ? userLogin.username : '',
+                            ip: '192.168.1.1',
+                            action: `Thêm ${value.name}`,
+                            time: Timestamp.fromDate(new Date())
+                        }))
                     }
                     else {
+
                         notice.success('Đã xảy ra lỗi', 2)
+                        dispatch(addDiary({
+                            username: userLogin ? userLogin.username : '',
+                            ip: '192.168.1.1',
+                            action: `Cập nhật ${value.name}`,
+                            time: Timestamp.fromDate(new Date())
+                        }))
                     }
                 }
             )

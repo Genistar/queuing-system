@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { defaultGiveNumberState, giveNumberType, Ifilter } from '../../constants/interface';
+import { defaultGiveNumberState, giveNumberType, Ifilter, serviceType } from '../../constants/interface';
 import { RootState } from '../../store';
 
 
@@ -9,6 +9,7 @@ const initialState: defaultGiveNumberState = {
     loading: false,
     giveNumber: null,
     giveNumbers: [],
+    giveNumbersFilter: [],
     message: {
         fail: false,
         text: "",
@@ -29,7 +30,7 @@ export const getAll = createAsyncThunk("givenumbers/getAll",
         if (filter) {
             if (filter.service != null)
                 giveNumbers = giveNumbers.filter(
-                    (giveNumber) => giveNumber.service === filter.service
+                    (giveNumber) => giveNumber.serviceName === filter.service
                 );
             if (filter.status != null)
                 giveNumbers = giveNumbers.filter(
@@ -44,7 +45,9 @@ export const getAll = createAsyncThunk("givenumbers/getAll",
                     (giveNumber) =>
                         giveNumber.name
                             .toLowerCase()
-                            .includes(filter.keywords?.toLowerCase())
+                            .includes(filter.keywords?.toLowerCase()),
+
+
                 );
         }
         // for (const user of users) {
@@ -64,11 +67,84 @@ export const get = createAsyncThunk("givenumbers/get", async (id: string) => {
         id,
         ...(giveNumberSnap.data() as giveNumberType),
         // role: (roleSnap.data() as roleType).name,
-    };
-
+    }
     return giveNumber;
 });
 
+export const getByIdService = createAsyncThunk(
+    "giveNumber/getByNameService",
+    async ({ key, filter }: { key?: string; filter?: Ifilter }) => {
+        let giveNumbers: giveNumberType[] = [];
+
+        const querySnapshot = await getDocs(
+            query(collection(db, "givenumber"), where("service", "==", key))
+        );
+        querySnapshot.forEach((value) => {
+            giveNumbers.push({
+                id: value.id,
+                ...(value.data() as giveNumberType),
+            });
+        });
+        for (const giveNumber of giveNumbers) {
+            const Snap = await getDoc(
+                doc(db, "services", giveNumber.service as string)
+            );
+            const temp = Snap.data() as serviceType;
+            giveNumber.number = temp.prefix + giveNumber.stt;
+        }
+        if (filter) {
+            if (filter.status != null)
+                giveNumbers = giveNumbers.filter(
+                    (giveNumber) => giveNumber.status == filter.status
+                );
+            if (filter.keywords != "")
+                giveNumbers = giveNumbers.filter((giveNumber) =>
+                    giveNumber.number
+                        ?.toLowerCase()
+                        .includes(filter.keywords.toLowerCase())
+                );
+        }
+        giveNumbers.sort(
+            (a, b) =>
+                b.timeGet.toDate().getTime() - a.timeGet.toDate().getTime()
+        );
+        return giveNumbers;
+    }
+);
+
+export const addGiveNumber = createAsyncThunk(
+    "givenumbers/add",
+    async (values: giveNumberType) => {
+        let giveNumbers: giveNumberType[] = [];
+
+        const querySnapshot = await getDocs(
+            query(
+                collection(db, "giveNumber"),
+                where("service", "==", values.service)
+            )
+        );
+        querySnapshot.forEach((value) => {
+            giveNumbers.push({
+                id: value.id,
+                ...(value.data() as giveNumberType),
+            });
+        });
+        giveNumbers.sort(
+            (a, b) =>
+                b.timeGet.toDate().getTime() - a.timeGet.toDate().getTime()
+        );
+
+        const newDoc = doc(collection(db, "givenumber"));
+        await setDoc(newDoc, {
+            ...values,
+            stt: giveNumbers.length > 0 ? giveNumbers[0].stt + 1 : 1,
+        });
+
+        const Ref = doc(db, "giveNumber", newDoc.id);
+        const Snap = await getDoc(Ref);
+        return Snap.id;
+    }
+);
 
 const giveNumberSlice = createSlice({
     name: 'givenumber',
@@ -115,6 +191,45 @@ const giveNumberSlice = createSlice({
             state.message.text = action.error.message;
             state.loading = false;
         });
+        builder.addCase(getByIdService.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(getByIdService.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.giveNumbersFilter = action.payload;
+                state.message.fail = false;
+                state.message.text = "";
+            } else {
+                state.giveNumbersFilter = [];
+                state.message.fail = true;
+                state.message.text = "Đã xảy ra lỗi !";
+            }
+            state.loading = false;
+        });
+        builder.addCase(getByIdService.rejected, (state, action) => {
+            state.message.fail = true;
+            state.message.text = action.error.message;
+            state.loading = false;
+        });
+        builder.addCase(addGiveNumber.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(addGiveNumber.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.message.fail = false;
+                state.message.text = "Thêm thành công";
+            } else {
+                state.message.fail = true;
+                state.message.text = "Đã xảy ra lỗi !";
+            }
+            state.loading = false;
+        });
+        builder.addCase(addGiveNumber.rejected, (state, action) => {
+            state.message.fail = true;
+            state.message.text = action.error.message;
+            state.loading = false;
+        });
+
     },
 })
 const giveNumberReducer = giveNumberSlice.reducer;

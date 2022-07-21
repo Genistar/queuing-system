@@ -49,6 +49,22 @@ export const load = createAsyncThunk("user/load", async () => {
     return user;
 });
 
+export const findByRoles = createAsyncThunk(
+    "user/roles",
+    async (role: string) => {
+        let userId = '';
+
+        const usersRef = collection(db, "user");
+        const q = query(usersRef, where("role", "==", role));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            userId = doc.id;
+        });
+        return userId;
+    }
+);
+
 export const getAll = createAsyncThunk("user/getAll",
     async (filter?: Ifilter) => {
         let users: userType[] = [];
@@ -61,7 +77,7 @@ export const getAll = createAsyncThunk("user/getAll",
             });
         });
         if (filter) {
-            if (filter.active != null)
+            if (filter.role != null)
                 users = users.filter(
                     (user) => user.role == filter.role
                 );
@@ -110,6 +126,7 @@ export const get = createAsyncThunk("user/get", async (id: string) => {
 
     return user;
 });
+
 
 export const update = createAsyncThunk(
     "user/updateUser",
@@ -213,5 +230,6 @@ const userReducer = userSlice.reducer;
 
 export const userSelector = (state: RootState) => state.userReducer;
 
+export const { logout } = userSlice.actions;
 
 export default userReducer

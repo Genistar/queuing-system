@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { getAll, giveNumberSelector } from '../../giveNumberSlice';
 import moment from 'moment';
+import { get, serviceSelector, getAll as getServices } from '../../../Service/serviceSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -19,14 +20,12 @@ interface Props {
     data: giveNumberData[]
 }
 
-const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động'];
-const serviceData = ['Tất cả', 'Rặng hàm mặt', 'Khoa sản', 'Phụ sản'];
 const nguonCapData = ['Tất cả', 'Kiosk']
 const columns: ColumnsType<giveNumberType> = [
     {
         title: 'STT',
-        dataIndex: 'stt',
-        key: 'stt'
+        dataIndex: 'number',
+        key: 'number'
     },
     {
         title: 'Tên khách hàng',
@@ -35,8 +34,8 @@ const columns: ColumnsType<giveNumberType> = [
     },
     {
         title: 'Tên dịch vụ',
-        dataIndex: 'service',
-        key: 'service',
+        dataIndex: 'serviceName',
+        key: 'serviceNamet',
     },
     {
         title: 'Thời gian cấp',
@@ -74,15 +73,20 @@ const columns: ColumnsType<giveNumberType> = [
     },
 ];
 const GiveNumberList: React.FC<Props> = (props: Props) => {
-    const [active, setActive] = useState<string>(activeData[0]);
-    const [service, setService] = useState<string>(serviceData[0]);
-    const [nguonCap, setNguonCap] = useState<string>(nguonCapData[0]);
+    const [status, setStatus] = useState<string | null>(null);
+    const [service, setService] = useState<string | null>(null);
+    const [source, setSource] = useState<string | null>(null);
     const [keywords, setKeywords] = useState<string>("");
     const dispatch = useAppDispatch();
-    const { loading, giveNumbers } = useAppSelector(giveNumberSelector)
+    const { loading, giveNumbers } = useAppSelector(giveNumberSelector);
+    const { services } = useAppSelector(serviceSelector)
     useEffect(() => {
-        dispatch(getAll({ keywords }))
-    }, [keywords])
+        dispatch(getAll({ keywords, service, status, source }))
+    }, [keywords, service, status, source])
+    useEffect(() => {
+        dispatch(getServices())
+    }, [])
+    console.log(status)
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -102,9 +106,11 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                                 />
                             }
                             onChange={(e) => { setService(e) }}
+                            defaultValue={null}
                         >
-                            {serviceData.map(s => (
-                                <Option key={s}>{s}</Option>
+                            <Option key={1} value={null}> Tất cả</Option>
+                            {services.map(s => (
+                                <Option key={s.id} value={s.name}>{s.name}</Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -113,17 +119,19 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                         <Select
                             size='large'
                             style={{ width: 150, position: 'absolute', top: 34, left: 169 }}
-                            value={active}
+                            value={status}
                             suffixIcon={
                                 <CaretDownOutlined
                                     style={dropdownIconStyle}
                                 />
                             }
-                            onChange={(e) => { setActive(e) }}
+                            defaultValue={null}
+                            onChange={(e) => { setStatus(e) }}
                         >
-                            {activeData.map(s => (
-                                <Option key={s}>{s}</Option>
-                            ))}
+                            <Option key='1' value={null}>Tất cả</Option>
+                            <Option key='2' value={"waiting"}>Đang chờ</Option>
+                            <Option key='3' value={"used"}>Đã sử dụng</Option>
+                            <Option key='4' value={"skip"}>Bỏ qua</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item>
@@ -131,17 +139,17 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                         <Select
                             size='large'
                             style={{ width: 150, position: 'absolute', top: 34, left: 334 }}
-                            value={nguonCap}
+                            value={source}
                             suffixIcon={
                                 <CaretDownOutlined
                                     style={dropdownIconStyle}
                                 />
                             }
-                            onChange={(e) => { setNguonCap(e) }}
+                            defaultValue={null}
+                            onChange={(e) => { setSource(e) }}
                         >
-                            {nguonCapData.map(s => (
-                                <Option key={s}>{s}</Option>
-                            ))}
+                            <Option value={null}>Tất cả</Option>
+                            <Option value={'Kiosk'}>Kiosk</Option>
                         </Select>
                     </Form.Item>
                     <Col span={4} style={{ position: 'absolute', left: 555, width: 320 }}>
@@ -183,6 +191,7 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
             </Row>
             <Row>
                 <Table
+                    columns={columns}
                     dataSource={
                         giveNumbers.map(giveNumber => ({
                             key: giveNumber.number,
@@ -192,11 +201,12 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                             dat: moment(
                                 giveNumber.date.toDate()
                             ).format("HH:mm - DD/MM/YYYY"),
+                            serviceNamet: giveNumber.serviceName,
                             ...giveNumber
                         }))
                     }
                     loading={loading}
-                    columns={columns}
+
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
                         position: 'absolute', top: 244, left: 224, width: 1152,

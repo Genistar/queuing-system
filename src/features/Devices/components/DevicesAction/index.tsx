@@ -9,7 +9,10 @@ import { useParams } from 'react-router-dom';
 import tagRender from './tagProps';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { add, deviceSelector, get, update } from '../../deviceSlice';
+import { add as addDiary } from '../../../SystemSetting/DairyUser/diarySlice'
 import { deviceType } from '../../../../constants/interface';
+import { userSelector } from '../../../SystemSetting/Account/userSlice';
+import { Timestamp } from 'firebase/firestore';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
@@ -45,6 +48,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
     const [user, setUser] = useState(String);
     const [password, setPassword] = useState(String);
     const [service, setService] = useState<string[]>([]);
+    const { userLogin } = useAppSelector(userSelector)
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const { device } = useAppSelector(deviceSelector)
@@ -70,9 +74,15 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
             dispatch(add(newDevice)).then((data) => {
                 if (data.meta.requestStatus === 'fulfilled') {
                     notice.success('Thêm thành công ', 3);
+                    dispatch(addDiary({
+                        username: userLogin ? userLogin.username : '',
+                        ip: newDevice.ip,
+                        action: `Thêm thiết bị ${newDevice.name}`,
+                        time: Timestamp.fromDate(new Date())
+                    }))
                 }
                 else {
-                    notice.success('Đã xảy ra lỗi', 2)
+                    notice.success('Đã xảy ra lỗi', 2);
                 }
             })
         } else {
@@ -83,6 +93,12 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                 if (data.meta.requestStatus === 'fulfilled') {
                     dispatch(get(key))
                     notice.success('Cập nhật thành công ', 3);
+                    dispatch(addDiary({
+                        username: userLogin ? userLogin.username : '',
+                        ip: newDevice.ip,
+                        action: `Cập nhật thiết bị ${newDevice.name}`,
+                        time: Timestamp.fromDate(new Date())
+                    }))
                 }
                 else {
                     notice.success('Đã xảy ra lỗi', 2)
@@ -92,7 +108,10 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
 
     }
     useEffect(() => {
-        form.setFieldsValue(device)
+        if (key) {
+            form.setFieldsValue(device)
+        }
+
     }, [device])
     useEffect(() => {
         if (key) {

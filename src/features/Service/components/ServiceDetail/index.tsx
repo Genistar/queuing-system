@@ -5,11 +5,12 @@ import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, ic
 import './Style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
-import { numberData } from '../../../../constants/interface';
+import { giveNumberType, numberData, serviceType } from '../../../../constants/interface';
 import { ColumnsType } from 'antd/lib/table';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import serviceReducer, { get, serviceSelector } from '../../serviceSlice';
+import { getByIdService, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
 const { Title, Text } = Typography;
 type QuizParams = {
     key: string;
@@ -23,23 +24,30 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
     let { key } = useParams<QuizParams>();
     const dispatch = useAppDispatch();
     const { service } = useAppSelector(serviceSelector);
+    const { loading, giveNumbersFilter } = useAppSelector(giveNumberSelector)
     useEffect(() => {
         dispatch(get(key))
     }, [key])
-    const columns: ColumnsType<numberData> = [
+    useEffect(() => {
+        if (key) {
+            dispatch(getByIdService({ key }))
+        }
+    }, [key])
+    console.log(giveNumbersFilter)
+    const columns = [
         {
             title: 'Số thứ tự',
-            dataIndex: `stt`,
-            key: 'stt'
+            dataIndex: `number`,
+            key: 'number'
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (dataIndex) => (
+            render: (dataIndex: any) => (
                 <span>
-                    <Badge status={dataIndex === 'Đã thực hiện' ? 'success' : 'warning'} />
-                    {dataIndex}
+                    <Badge status={dataIndex === 'waiting' ? 'processing' : (dataIndex === 'used' ? 'default' : 'warning')} />
+                    {dataIndex === 'waiting' ? 'Đang chờ' : (dataIndex === 'used' ? 'Đã sử dụng' : 'Bỏ qua')}
                 </span>
             ),
         }
@@ -166,7 +174,14 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                             bordered
                             pagination={{ position: ["bottomRight"], pageSize: 8 }}
                             columns={columns}
-                            dataSource={data}
+                            loading={loading}
+                            dataSource={
+                                giveNumbersFilter.map(gn => ({
+                                    key: gn.id,
+                                    number: gn.number,
+                                    status: gn.status
+                                }))
+                            }
                             size='middle'
                         />
                     </Card>

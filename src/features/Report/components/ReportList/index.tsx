@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { giveNumberData } from '../../../../constants/interface'
+import { giveNumberData, giveNumberType } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { addTextStyle, titlePageStyle } from '../../../GiveNumber/components/GiveNumberList/Style';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { getAll, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
+import moment from 'moment';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -17,7 +20,7 @@ interface Props {
 const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động'];
 const serviceData = ['Tất cả', 'Rặng hàm mặt', 'Khoa sản', 'Phụ sản'];
 const nguonCapData = ['Tất cả', 'Kiosk']
-const columns: ColumnsType<giveNumberData> = [
+const columns: ColumnsType<giveNumberType> = [
     {
         title: 'STT',
         dataIndex: 'key',
@@ -25,29 +28,29 @@ const columns: ColumnsType<giveNumberData> = [
     },
     {
         title: 'Tên dịch vụ',
-        dataIndex: 'serviceName',
-        key: 'serviceName',
+        dataIndex: 'serviceNamet',
+        key: 'serviceNamet',
     },
     {
         title: 'Thời gian cấp',
-        dataIndex: 'date',
-        key: 'date',
+        dataIndex: 'time',
+        key: 'time',
     },
     {
         title: 'Trạng thái',
-        dataIndex: 'active',
-        key: 'active',
+        dataIndex: 'status',
+        key: 'status',
         render: (dataIndex) => (
             <span>
-                <Badge status={dataIndex === true ? 'success' : 'warning'} />
-                {dataIndex}
+                <Badge status={dataIndex === 'waiting' ? 'processing' : (dataIndex === 'used' ? 'default' : 'warning')} />
+                {dataIndex === 'waiting' ? 'Đang chờ' : (dataIndex === 'used' ? 'Đã sử dụng' : 'Bỏ qua')}
             </span>
         ),
     },
     {
         title: 'Nguồn cấp',
-        dataIndex: 'nguoncap',
-        key: 'nguoncap'
+        dataIndex: 'source',
+        key: 'source'
     }
 ];
 const ReportList: React.FC<Props> = (props: Props) => {
@@ -55,6 +58,11 @@ const ReportList: React.FC<Props> = (props: Props) => {
     const [service, setService] = useState<String>(serviceData[0]);
     const [nguonCap, setNguonCap] = useState<String>(nguonCapData[0]);
     const { data } = props;
+    const { giveNumbers, loading } = useAppSelector(giveNumberSelector)
+    const dispatch = useAppDispatch()
+    useEffect(() => {
+        dispatch(getAll())
+    }, [])
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
@@ -87,8 +95,18 @@ const ReportList: React.FC<Props> = (props: Props) => {
             </Row>
             <Row>
                 <Table
-                    dataSource={data}
-                    columns={columns}
+                    dataSource={giveNumbers.map(giveNumber => ({
+                        key: giveNumber.number,
+                        time: moment(
+                            giveNumber.timeGet.toDate()
+                        ).format("HH:mm - DD/MM/YYYY"),
+                        serviceNamet: giveNumber.serviceName,
+                        ...giveNumber
+                    }))}
+                    columns={
+                        columns
+                    }
+                    loading={loading}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
                         position: 'absolute', top: 224, left: 224, width: 1152,
