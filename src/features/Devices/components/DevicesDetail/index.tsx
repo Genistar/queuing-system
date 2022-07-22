@@ -13,10 +13,8 @@ type QuizParams = {
     key: string;
 };
 interface Props {
-    data: devicesData[]
 }
 const DeviceDetail: React.FC<Props> = (props: Props) => {
-    let { data } = props
     let { key } = useParams<QuizParams>();
     const [form] = Form.useForm();
     const dispatch = useAppDispatch()

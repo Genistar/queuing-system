@@ -14,9 +14,7 @@ import { servicesVersion } from 'typescript';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-interface Props {
-    data: devicesData[]
-}
+interface Props { }
 
 
 const columns: ColumnsType<deviceType> = [
