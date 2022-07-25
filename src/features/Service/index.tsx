@@ -1,5 +1,5 @@
 import { Row } from 'antd'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import React from 'react'
 import ServiceList from './components/ServiceList'
 import ServiceAction from './components/ServiceAction'
@@ -12,18 +12,13 @@ const ServicePage = (props: Props) => {
 
     return (
         <Row>
-            <Route path='/admin/service' exact>
-                <ServiceList />
-            </Route>
-            <Route path='/admin/service/add'>
-                <ServiceAction />
-            </Route>
-            <Route path='/admin/service/detail/:key'>
-                <ServiceDetail data={numberData} />
-            </Route>
-            <Route path='/admin/services/update/:key'>
-                <ServiceAction />
-            </Route>
+            <Routes>
+                <Route path='/' element={<ServiceList />} />
+                <Route path='/add' element={<ServiceAction />} />
+                <Route path='/detail/:key' element={<ServiceDetail />} />
+                <Route path='/update/:key' element={<ServiceAction />} />
+            </Routes>
+
         </Row>
     )
 }

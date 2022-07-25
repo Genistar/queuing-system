@@ -12,7 +12,6 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
-    data: roleData[]
 }
 
 const columns: ColumnsType<roleType> = [
@@ -36,7 +35,7 @@ const columns: ColumnsType<roleType> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/role/update/${record.id}`}>Cập nhật</Link>
+                    <Link to={`/admin/setting/role/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
@@ -88,7 +87,12 @@ const RoleList: React.FC<Props> = (props: Props) => {
                     }}
                     bordered
                     loading={loading}
-                    pagination={{ position: ["bottomRight"], pageSize: 7 }}
+                    pagination={{
+                        defaultPageSize: 8,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                 />
             </Row>
             <Link style={addDeviceStyle} to='/admin/role/add'>

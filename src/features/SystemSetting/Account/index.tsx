@@ -1,6 +1,6 @@
 import { Row } from 'antd'
 import React, { useState } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { accountData, userType } from '../../../constants/interface'
 import { useAppDispatch, useAppSelector } from '../../../store'
 import AccountAction from './Components/AccountAction'
@@ -12,15 +12,12 @@ type Props = {}
 const AccountPage = (props: Props) => {
     return (
         <Row>
-            <Route path='/admin/account' exact>
-                <AccountList />
-            </Route>
-            <Route path='/admin/account/add'>
-                <AccountAction />
-            </Route>
-            <Route path='/admin/account/update/:key'>
-                <AccountAction />
-            </Route>
+            <Routes>
+                <Route path='/' element={<AccountList />} />
+                <Route path='/add' element={<AccountAction />} />
+                <Route path='/update/:key' element={<AccountAction />} />
+            </Routes>
+
         </Row>
     )
 }

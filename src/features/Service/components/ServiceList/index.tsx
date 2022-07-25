@@ -153,7 +153,12 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                         }))
                     }
                     loading={loading}
-                    pagination={{ position: ["bottomRight"] }}
+                    pagination={{
+                        defaultPageSize: 8,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                 />
             </Row>
             <Link style={addDeviceStyle} to='/admin/service/add'>

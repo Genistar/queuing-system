@@ -17,7 +17,7 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
-    data: giveNumberData[]
+
 }
 
 const nguonCapData = ['Tất cả', 'Kiosk']
@@ -213,7 +213,12 @@ const GiveNumberList: React.FC<Props> = (props: Props) => {
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
-                    pagination={{ position: ["bottomRight"], pageSize: 7 }}
+                    pagination={{
+                        defaultPageSize: 8,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                 />
             </Row>
             <Link style={addDeviceStyle} to='/admin/givenumber/add'>

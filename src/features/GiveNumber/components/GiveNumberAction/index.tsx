@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Modal, Select, Typography, Row, Col, message as notice } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { serviceSelector } from '../../../Service/serviceSlice';
 import { getAll as getServices, get as getService } from '../../../Service/serviceSlice';
@@ -15,7 +15,6 @@ interface form {
     service: string
 }
 interface Props {
-    addNewData: any;
 }
 
 
@@ -23,7 +22,7 @@ const GiveNumberAction: React.FC<Props> = (props: Props) => {
     const [serviceId, setServiceId] = useState<any>();
     const [isModalVisible, setIsModalVisible] = useState(false)
     let [form] = Form.useForm()
-    let history = useHistory();
+    let navigate = useNavigate();
     const time = new Date();
     const date = new Date();
     const dispatch = useAppDispatch()
@@ -38,7 +37,7 @@ const GiveNumberAction: React.FC<Props> = (props: Props) => {
         dispatch(getService(serviceId))
     }, [serviceId])
     const onBack = () => {
-        history.goBack()
+        navigate('../')
     }
     const addNewNumber = (value: form) => {
         date.setHours(time.getHours() + 3);

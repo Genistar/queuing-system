@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Col, Typography, Form, Input, Button, Checkbox, Row, message as notice } from 'antd'
 import { buttonAddstyle, buttonCancelstyle, inputStyle, titlePageStyle as T }
     from '../../../../Devices/components/DevicesAction/Style';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { titlePageStyle } from '../../../../Devices/components/DevicesList/Style';
 import { roleType } from '../../../../../constants/interface';
@@ -19,7 +19,7 @@ type QuizParams = {
 type Props = {}
 
 const RoleAction: React.FC = (props: Props) => {
-    let history = useHistory();
+    let navigate = useNavigate();
     let { key } = useParams<QuizParams>();
     const [form] = Form.useForm()
     const dispatch = useAppDispatch();
@@ -34,7 +34,7 @@ const RoleAction: React.FC = (props: Props) => {
     }, [role])
 
     const onBack = () => {
-        history.goBack()
+        navigate('../')
     }
     const onAddRole = (value: roleType) => {
         if (!key) {
@@ -48,7 +48,7 @@ const RoleAction: React.FC = (props: Props) => {
             ).then((data) => {
                 if (data.meta.requestStatus == "fulfilled") {
                     notice.success("Thêm thành công", 3);
-                    history.goBack()
+                    navigate('../')
                     dispatch(
                         add({
                             username: userLogin ? userLogin.username : '',

@@ -10,7 +10,7 @@ import { deviceSelector, get } from '../../deviceSlice';
 import { useForm } from 'rc-field-form';
 const { Title, Text } = Typography;
 type QuizParams = {
-    key: string;
+    key: any;
 };
 interface Props {
 }

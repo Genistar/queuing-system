@@ -15,7 +15,6 @@ import moment from 'moment';
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 interface Props {
-    data: dairyData[]
 }
 const roleData = ['Tất cả', 'Kế toán', 'Thu ngân', 'Quản lý']
 const columns: ColumnsType<diaryType> = [
@@ -41,7 +40,6 @@ const columns: ColumnsType<diaryType> = [
     },
 ];
 const DairyList: React.FC<Props> = (props: Props) => {
-    const { data } = props;
     const { diaries, loading } = useAppSelector(diarySelector);
     const dispatch = useAppDispatch();
     useEffect(() => {
@@ -95,7 +93,12 @@ const DairyList: React.FC<Props> = (props: Props) => {
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
-                    pagination={{ position: ["bottomRight"], pageSize: 7 }}
+                    pagination={{
+                        defaultPageSize: 7,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                     loading={loading}
                 />
             </Row>

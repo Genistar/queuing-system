@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { load, login, userSelector } from '../../../../SystemSetting/Account/userSlice';
 
@@ -14,17 +14,21 @@ type Props = {
 const LoginForm: React.FC<Props> = (props: Props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [required, setRequired] = useState(Boolean);
+    const [messageInput, setMessageInput] = useState<any>('');
     const [form] = Form.useForm()
-    const history = useHistory()
+    const navigate = useNavigate()
     const dispatch = useAppDispatch();
     const { authLoading, message, userLogin } = useAppSelector(userSelector);
     const onHandleLogin = (e: any) => {
+
         const value = {
             username: username,
             password: password
         }
         dispatch(login(value)).then(() => dispatch(load()));
-        console.log(value)
+        console.log(messageInput)
+
     }
     useEffect(() => {
         dispatch(load())
@@ -32,7 +36,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         if (userLogin) {
-            history.push("/admin/dashboard");
+            navigate('/admin/dashboard')
         }
     }, [userLogin]);
     return (
@@ -53,14 +57,14 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                 name="username"
                 rules={[
                     {
-                        required: true,
-                        message: 'Please input your username!',
+                        required: message.fail,
+                        message: '',
                     },
                 ]}
             >
                 <label style={{ fontSize: '18px' }}>Tên đăng nhập *</label>
                 <Input
-                    size='large' placeholder="input username" style={{ borderRadius: '6px', marginTop: '10px', height: '44px' }}
+                    size='large' placeholder="Nhập tài khoản" style={{ borderRadius: '6px', marginTop: '10px', height: '44px' }}
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </Form.Item>
@@ -69,8 +73,8 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                 name="password"
                 rules={[
                     {
-                        required: true,
-                        message: 'Please input your password!',
+                        required: message.fail,
+                        message: message.text,
                     },
                 ]}
                 style={{ marginTop: '-10px' }}
@@ -78,7 +82,7 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                 <label style={{ fontSize: '18px' }}>Mật khẩu *</label>
                 <Input.Password
                     size='large'
-                    placeholder="input password"
+                    placeholder="Nhập mật khẩu"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     style={{ borderRadius: '6px', marginTop: '5px', height: '44px' }}
                     onChange={(e) => setPassword(e.target.value)}
@@ -89,30 +93,23 @@ const LoginForm: React.FC<Props> = (props: Props) => {
                     offset: 0,
                     span: 0,
                 }}
-                style={{ marginTop: '-15px' }}
+                style={{ top: message.fail === false ? 451 : 521, left: message.fail === false ? 104 : 257, position: 'absolute' }}
             >
-                <Link style={{ color: 'red', fontSize: '14px' }} to="/login/forgetpassword">
+                <Link style={{ color: 'red', fontSize: '14px' }} to="/auth/forgetpassword">
                     Quên mật khẩu?
                 </Link>
 
             </Form.Item>
-            <Form.Item
-                wrapperCol={{
-                    offset: 5,
-                    span: 0,
-                }}
+            <Button
+                type="primary"
+                htmlType="submit"
+                size='large'
+                style={{ backgroundColor: '#FF9138', borderRadius: '10px', width: 162, height: 40, fontSize: '16px', marginTop: 10, marginLeft: 120 }}
+                loading={authLoading}
+                onClick={onHandleLogin}
             >
-                <Button
-                    type="primary"
-                    htmlType="submit"
-                    size='large'
-                    style={{ backgroundColor: '#FF9138', borderRadius: '10px', width: '30%', fontSize: '16px', marginTop: '-10px' }}
-                    loading={authLoading}
-                    onClick={onHandleLogin}
-                >
-                    Đăng nhập
-                </Button>
-            </Form.Item>
+                Đăng nhập
+            </Button>
         </Form>
     )
 }

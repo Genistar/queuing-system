@@ -10,15 +10,13 @@ import { get, giveNumberSelector } from '../../giveNumberSlice'
 import moment from 'moment'
 const { Title, Text } = Typography;
 type QuizParams = {
-    key: string;
+    key: any;
 };
 interface Props {
-    data: giveNumberData[]
 }
 
 const GiveNumberDetail: React.FC<Props> = (props: Props) => {
     let { key } = useParams<QuizParams>();
-    const { data } = props;
     const dispatch = useAppDispatch();
     const { giveNumber } = useAppSelector(giveNumberSelector)
     useEffect(() => {

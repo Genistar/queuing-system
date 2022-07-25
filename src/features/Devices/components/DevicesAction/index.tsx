@@ -4,8 +4,7 @@ import { CaretDownOutlined } from '@ant-design/icons'
 import { dropdownIconStyle, titlePageStyle } from '../DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formBottomStyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
-import { useHistory } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import tagRender from './tagProps';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { add, deviceSelector, get, update } from '../../deviceSlice';
@@ -15,9 +14,6 @@ import { userSelector } from '../../../SystemSetting/Account/userSlice';
 import { Timestamp } from 'firebase/firestore';
 const { Title, Text } = Typography;
 const { Option } = Select;
-type QuizParams = {
-    key: string;
-};
 type Props = {
 }
 
@@ -52,10 +48,10 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const { device } = useAppSelector(deviceSelector)
-    let history = useHistory();
-    let { key } = useParams<QuizParams>();
+    let navigate = useNavigate();
+    let { key } = useParams();
     const onBack = () => {
-        history.goBack()
+        navigate('../')
     }
     const handleChange = (value: any) => {
         setDeviceType(value)
@@ -91,7 +87,6 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                 ...newDevice
             })).then((data) => {
                 if (data.meta.requestStatus === 'fulfilled') {
-                    dispatch(get(key))
                     notice.success('Cập nhật thành công ', 3);
                     dispatch(addDiary({
                         username: userLogin ? userLogin.username : '',

@@ -2,6 +2,7 @@ import React from "react"
 
 export const diagramStyle: React.CSSProperties = {
     marginTop: -120,
+    marginLeft: -10
 }
 export const cardStyle: React.CSSProperties = {
     position: 'absolute',
@@ -12,20 +13,20 @@ export const cardStyle: React.CSSProperties = {
 }
 
 export const frameStyle: React.CSSProperties = {
-    top: 4,
+    top: 14,
     left: 4
 }
 
 export const frame1Style: React.CSSProperties = {
-    top: 4,
+    top: 14,
     left: 207
 }
 export const frame2Style: React.CSSProperties = {
-    top: 4,
+    top: 14,
     left: 409
 }
 export const frame3Style: React.CSSProperties = {
-    top: 4,
+    top: 14,
     left: 612
 }
 
@@ -52,7 +53,7 @@ export const labelStyle: React.CSSProperties = {
 export const textLabelStyle: React.CSSProperties = { fontSize: 14, left: 52.02, position: 'absolute', fontWeight: 700, width: 60 }
 
 export const cardAreaStyle: React.CSSProperties = {
-    top: 165, left: 4, height: 484, width: 794, position: 'absolute',
+    top: 175, left: 4, height: 484, width: 794, position: 'absolute',
     filter: 'drop-shadow(2px 2px 15px rgba(70, 64, 67, 0.1))', borderRadius: 12
 }
 export const titleAreaStyle: React.CSSProperties = {

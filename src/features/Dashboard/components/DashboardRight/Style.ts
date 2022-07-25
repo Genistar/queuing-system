@@ -1,10 +1,13 @@
-export const cardStyle = {
+import { CSSProperties } from "react"
+
+export const cardStyle: CSSProperties = {
     boxShadow: '2px 2px 15px rgba(70, 64, 67, 0.1)',
     borderRadius: 12,
     width: 353,
     height: 83,
     marginLeft: 24,
-    marginTop: 8
+    marginTop: 8,
+    cursor: 'pointer'
 }
 export const numberStyle = {
     color: '#FF7506'

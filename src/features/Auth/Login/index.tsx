@@ -1,22 +1,23 @@
 import { Col, Image, Layout, Row } from 'antd'
-import React from 'react'
-import { Route, useHistory } from 'react-router-dom'
+import React, { CSSProperties } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import ForgetPassword from './components/ForgetPassword'
 import LoginForm from './components/LoginForm'
 import ResetPassword from './components/ResetPassword';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../../config/firebase'
-var logo = require('../../../assets/Logo-removebg-preview.png')
+
+var logo = require('../../../assets/Logo-removebg-preview.png');
+var login = require('../../../assets/login.png');
+var login2 = require('../../../assets/login2.png');
 
 const { Sider, Header, Content, Footer } = Layout
 interface Props {
 }
 const LoginPage: React.FC<Props> = (props: Props): JSX.Element => {
-    let history = useHistory()
-    const forgotPassword = (user: string) => {
-        history.push('/login/renewpassword');
-        console.log(user)
-        return sendPasswordResetEmail(auth, user)
+    let navigate = useNavigate();
+    const style: CSSProperties = {
+        width: 680, height: 614.0, position: 'absolute', top: 55, left: 80
     }
     return (
         <Row>
@@ -33,22 +34,25 @@ const LoginPage: React.FC<Props> = (props: Props): JSX.Element => {
                         />
                     </Header>
                     <Content
-                        style={{ marginLeft: '1%', minWidth: '400px' }}
+                        style={{ marginLeft: '1%', minWidth: '400   px' }}
                     >
-                        <Route path='/login' exact={true}>
-                            <LoginForm />
-                        </Route>
-                        <Route path="/login/forgetpassword">
-                            <ForgetPassword forgotPassword={forgotPassword} />
-                        </Route>
-                        <Route path="/login/renewpassword">
-                            <ResetPassword />
-                        </Route>
+                        <Routes>
+                            <Route path='/login' element={<LoginForm />} />
+                            <Route path="/forgetpassword" element={<ForgetPassword />} />
+                            <Route path="/renewpassword" element={<ResetPassword />} />
+                        </Routes>
+
                     </Content>
-                    <Footer style={{ backgroundColor: '#F7F7F7' }}>Footer</Footer>
+                    <Footer style={{ backgroundColor: '#F7F7F7' }}></Footer>
                 </Layout>
             </Col>
-            <Col span={14}>image</Col>
+            <Col span={14}>
+                <Routes>
+                    <Route path='/login' element={<Image style={style} src={login} />} />
+                    <Route path="/forgetpassword" element={<Image style={style} src={login2} />} />
+                    <Route path="/renewpassword" element={<Image style={style} src={login2} />} />
+                </Routes>
+            </Col>
         </Row>
     )
 }

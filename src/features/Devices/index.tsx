@@ -1,6 +1,6 @@
 import { Col, Row, Typography } from 'antd'
 import React from 'react'
-import { Route, useRouteMatch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import DevicesAction from './components/DevicesAction'
 import DeviceDetail from './components/DevicesDetail'
 import DevicesList from './components/DevicesList'
@@ -11,19 +11,16 @@ const DevicesPage = (props: Props) => {
 
   return (
     <Row>
-      <Route path='/admin/devices' exact>
-        <DevicesList />
-      </Route>
-      <Route path='/admin/devices/add'>
-        <DevicesAction />
-      </Route>
-      <Route path='/admin/devices/detail/:key'>
-        <DeviceDetail />
-      </Route>
-      <Route path='/admin/devices/update/:key'>
-        <DevicesAction />
-      </Route>
+      <Routes>
+        <Route path='/' element={<DevicesList />} />
+
+        <Route path='/add' element={<DevicesAction />} />
+
+        <Route path='/detail/:key' element={<DeviceDetail />} />
+        <Route path='/update/:key' element={<DevicesAction />} />
+      </Routes>
     </Row>
+
   )
 }
 

@@ -4,7 +4,7 @@ import { CaretDownOutlined } from '@ant-design/icons'
 import { dropdownIconStyle, titlePageStyle } from '../../../../Devices/components/DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formLeftStyle, formRightStyle, inputStyle, titlePageStyle as T } from './Style';
 import { layoutStyle } from './Style';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { userType } from '../../../../../constants/interface';
 import { add, get, update, userSelector } from '../../userSlice'
@@ -16,7 +16,7 @@ import { getAll, roleSelector } from '../../../Role/roleSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
-    key: string;
+    key: any;
 };
 interface Props {
 }
@@ -33,7 +33,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
     const [retypePassword, setReTypePassword] = useState(String);
     const [role, setRole] = useState(String);
     const [active, setActive] = useState<boolean>(false)
-    let history = useHistory();
+    let navigate = useNavigate();
     let { key } = useParams<QuizParams>();
     const [form] = Form.useForm()
     const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
     const { userLogin } = useAppSelector(userSelector);
     const { roles } = useAppSelector(roleSelector)
     const onBack = () => {
-        history.goBack()
+        navigate('../')
     }
     useEffect(() => {
         dispatch(getAll())
@@ -83,7 +83,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                     notice.success('Đã xảy ra lỗi', 3)
                 }
             })
-            history.goBack()
+            navigate('../')
         }
         else {
             dispatch(update({
@@ -103,7 +103,7 @@ const AccountAction: React.FC<Props> = (props: Props) => {
                     notice.success('Đã xảy ra lỗi', 3)
                 }
             })
-            history.goBack()
+            navigate('../')
         }
     }
     return (

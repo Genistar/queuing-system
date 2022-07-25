@@ -1,20 +1,18 @@
 import { Button, Form, Input } from 'antd'
 import React, { useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  forgotPassword: (user: string) => Promise<void>
 }
 
 const ForgetPassword: React.FC<Props> = (props: Props) => {
   const [email, setEmail] = useState('');
-  let history = useHistory();
-  const { forgotPassword } = props;
+  const navigate = useNavigate()
   const onGetEmail = (e: any) => {
     e.preventDefault()
     console.log(email)
-    forgotPassword(email)
+    navigate('/auth/renewpassword')
   }
   return (
     <Form
@@ -70,7 +68,7 @@ const ForgetPassword: React.FC<Props> = (props: Props) => {
           type="primary"
           size='large'
           style={{ backgroundColor: '#F7F7F7', borderColor: '#FF9138', borderRadius: '10px', width: '25%', fontSize: '16px', marginLeft: '-10%', color: '#FF9138' }}
-          onClick={() => { history.goBack() }}
+          onClick={() => { navigate('../login') }}
         >
           Quay lại
         </Button>

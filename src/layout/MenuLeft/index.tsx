@@ -44,9 +44,9 @@ const items: MenuItem[] = [
         }}
         />,
         [
-            getItem(<Link to='/admin/role'>Quản lý vai trò</Link>, '/admin/role'),
-            getItem(<Link to='/admin/account'>Quản lý tài khoản</Link>, '/admin/account'),
-            getItem(<Link to='/admin/dairy'>Nhật ký người dùng</Link>, '/admin/dairy')
+            getItem(<Link to='/admin/setting/role'>Quản lý vai trò</Link>, '/admin/setting/role'),
+            getItem(<Link to='/admin/setting/account'>Quản lý tài khoản</Link>, '/admin/setting/account'),
+            getItem(<Link to='/admin/setting/dairy'>Nhật ký người dùng</Link>, '/admin/setting/dairy')
         ]),
 ];
 

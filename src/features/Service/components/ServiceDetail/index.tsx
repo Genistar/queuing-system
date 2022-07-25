@@ -13,14 +13,12 @@ import serviceReducer, { get, serviceSelector } from '../../serviceSlice';
 import { getByIdService, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
 const { Title, Text } = Typography;
 type QuizParams = {
-    key: string;
+    key: any;
 };
 interface Props {
-    data: numberData[]
 }
 
 const ServiceDetail: React.FC<Props> = (props: Props) => {
-    const { data } = props;
     let { key } = useParams<QuizParams>();
     const dispatch = useAppDispatch();
     const { service } = useAppSelector(serviceSelector);
@@ -172,7 +170,12 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                             style={{ width: 669, position: 'absolute', top: 100 }}
                             rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                             bordered
-                            pagination={{ position: ["bottomRight"], pageSize: 8 }}
+                            pagination={{
+                                defaultPageSize: 8,
+                                position: ["bottomRight"],
+                                showLessItems: true,
+                                showSizeChanger: false,
+                            }}
                             columns={columns}
                             loading={loading}
                             dataSource={

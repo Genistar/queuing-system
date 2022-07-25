@@ -189,7 +189,12 @@ const DevicesList: React.FC<Props> = (props: Props) => {
                         key: device.deviceId,
                         ...device
                     }))}
-                    pagination={{ position: ["bottomRight"] }}
+                    pagination={{
+                        defaultPageSize: 8,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                 />
             </Row>
             <Link style={addDeviceStyle} to='/admin/devices/add'>

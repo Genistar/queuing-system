@@ -14,7 +14,6 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {
-    data: giveNumberData[]
 }
 
 const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động'];
@@ -57,7 +56,6 @@ const ReportList: React.FC<Props> = (props: Props) => {
     const [active, setActive] = useState<String>(activeData[0]);
     const [service, setService] = useState<String>(serviceData[0]);
     const [nguonCap, setNguonCap] = useState<String>(nguonCapData[0]);
-    const { data } = props;
     const { giveNumbers, loading } = useAppSelector(giveNumberSelector)
     const dispatch = useAppDispatch()
     useEffect(() => {
@@ -113,7 +111,12 @@ const ReportList: React.FC<Props> = (props: Props) => {
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
-                    pagination={{ position: ["bottomRight"], pageSize: 7 }}
+                    pagination={{
+                        defaultPageSize: 8,
+                        position: ["bottomRight"],
+                        showLessItems: true,
+                        showSizeChanger: false,
+                    }}
                 />
             </Row>
         </div>

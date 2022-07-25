@@ -1,7 +1,7 @@
 export const labelStyle = {
     fontSize: '24px',
     lineHeight: '36px',
-    marginLeft: '22%'
+    marginLeft: '12%'
 }
 export const inputStyle = {
     height: '44px',

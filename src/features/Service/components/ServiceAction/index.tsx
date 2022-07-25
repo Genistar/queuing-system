@@ -4,7 +4,7 @@ import { titlePageStyle } from '../../../Devices/components/DevicesList/Style';
 import { buttonAddstyle, buttonCancelstyle, buttonstyle, formLeftStyle, inputStyle, titlePageStyle as T } from '../../../Devices/components/DevicesAction/Style';
 import { formBottomStyle } from './Style';
 import { layoutStyle } from '../../../Devices/components/DevicesAction/Style';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { devicesData, serviceType } from '../../../../constants/interface';
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../../store';
@@ -15,13 +15,13 @@ import { Timestamp } from 'firebase/firestore';
 const { Title, Text } = Typography;
 const { Option } = Select;
 type QuizParams = {
-    key: string;
+    key: any;
 };
 
 type Props = {}
 
 const ServiceAction: React.FC = (props: Props) => {
-    let history = useHistory();
+    let navigate = useNavigate();
     let { key } = useParams<QuizParams>();
     const [increase, setIncrease] = useState<boolean>(false);
     const [prefix, setPrefix] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const ServiceAction: React.FC = (props: Props) => {
 
 
     const onBack = () => {
-        history.goBack()
+        navigate('../')
     }
     const onAddNewService = (value: serviceType) => {
         console.log(value)

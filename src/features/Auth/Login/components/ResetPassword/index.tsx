@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd'
 import React, { useState } from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 const ResetPassword = (props: Props) => {
@@ -9,13 +9,13 @@ const ResetPassword = (props: Props) => {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [required, setRequired] = useState(Boolean);
     const [message, setMessage] = useState('');
-    let history = useHistory()
+    let navigate = useNavigate()
     const onChangePassword = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         if (password && passwordConfirm) {
             setRequired(false)
             if (password === passwordConfirm) {
                 console.log('Cấp lại mật khẩu thành công mật khẩu mới của bạn là' + password)
-                history.push('/login')
+                navigate('/auth/login')
                 window.location.reload()
             }
             else {

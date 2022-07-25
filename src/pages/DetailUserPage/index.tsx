@@ -2,10 +2,13 @@ import React from 'react';
 import { Input, Form, Image, Button } from 'antd'
 import { inputStyle, itemStyle, labelStyle } from './Style';
 import { CameraOutlined } from '@ant-design/icons';
+import { useAppSelector } from '../../store';
+import { userSelector } from '../../features/SystemSetting/Account/userSlice';
 var image = require('../../assets/HKicon.png')
 type Props = {}
 const DetailUserPage: React.FC = (props: Props) => {
     const [form] = Form.useForm();
+    const { userLogin } = useAppSelector(userSelector)
     return (
         <Form
             layout='inline'
@@ -37,30 +40,30 @@ const DetailUserPage: React.FC = (props: Props) => {
                     }}></Button>
                 </Form.Item>
                 <Form.Item style={{ marginTop: '5%' }}>
-                    <label style={labelStyle}> Trần Trí Trung</label>
+                    <label style={labelStyle}> {userLogin?.name}</label>
                 </Form.Item>
             </Form>
 
             <Form layout='vertical'>
                 <Form.Item style={itemStyle} label='Tên người dùng'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.name} style={inputStyle} />
                 </Form.Item>
                 <Form.Item style={itemStyle} label='Số điện thoại'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.phone} style={inputStyle} />
                 </Form.Item>
                 <Form.Item style={itemStyle} label='Email'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.email} style={inputStyle} />
                 </Form.Item>
             </Form>
             <Form layout='vertical'>
                 <Form.Item style={itemStyle} label='Tên đăng nhập'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.username} style={inputStyle} />
                 </Form.Item>
                 <Form.Item style={itemStyle} label='Mật khẩu'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.password} style={inputStyle} />
                 </Form.Item>
                 <Form.Item style={itemStyle} label='Vai trò'>
-                    <Input name='name' size='large' disabled={true} placeholder='Trần Trí Trung' style={inputStyle} />
+                    <Input name='name' size='large' disabled={true} placeholder={userLogin?.role} style={inputStyle} />
                 </Form.Item>
             </Form>
 
