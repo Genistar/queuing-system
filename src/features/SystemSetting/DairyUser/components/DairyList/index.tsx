@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Typography, Table, Card, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { dairyData, diaryType } from '../../../../../constants/interface'
+import { SearchOutlined, PlusOutlined, CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
+import { diaryType } from '../../../../../constants/interface'
 import 'antd/dist/antd.css';
-import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
+import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '../../../../Devices/components/DevicesList/Style';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { diarySelector, getAll } from '../../diarySlice'
 import { Timestamp } from 'firebase/firestore';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
+import { RangePickerProps } from 'antd/lib/date-picker';
+import { RangeValue } from "rc-picker/lib/interface";
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 interface Props {
 }
-const roleData = ['Tất cả', 'Kế toán', 'Thu ngân', 'Quản lý']
+const dateFormat = 'DD/MM/YYYY';
 const columns: ColumnsType<diaryType> = [
     {
         title: 'Tên đăng nhập',
@@ -40,11 +42,22 @@ const columns: ColumnsType<diaryType> = [
     },
 ];
 const DairyList: React.FC<Props> = (props: Props) => {
+    const [dateRange, setDateRange] = useState<RangeValue<Moment>>(null);
+    const [keywords, setKeywords] = useState<string>('')
     const { diaries, loading } = useAppSelector(diarySelector);
     const dispatch = useAppDispatch();
     useEffect(() => {
-        dispatch(getAll())
-    }, [])
+        dispatch(getAll({ keywords, dateRange: dateRange ? [dateRange[0] as Moment, dateRange[1] as Moment] : null }))
+    }, [keywords, dateRange])
+    const onChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
+        if (dates) {
+            console.log('From: ', dates[0], ', to: ', moment(dates[1]).format('HH:mm DD/MM/YYYY'));
+            console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+            setDateRange([dates[0], dates[1]])
+        } else {
+            console.log('Clear');
+        }
+    };
     return (
         <div>
             <Title level={3} style={{ position: 'absolute', left: 224, top: 104, fontWeight: 700, color: '#ff7506' }}>
@@ -56,7 +69,29 @@ const DairyList: React.FC<Props> = (props: Props) => {
                         name='role'
                         label='Chọn thời gian'
                     >
-                        <RangePicker showTime suffixIcon={<FontAwesomeIcon icon={faCalendar} />} />
+                        <RangePicker
+                            showTime
+                            suffixIcon={
+                                <div style={{ zIndex: 100 }}>
+                                    <FontAwesomeIcon
+                                        icon={faCalendar}
+                                        style={{ marginLeft: -280, color: '#ff7506', zIndex: 100 }}
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={faCalendar}
+                                        style={{ marginLeft: 147, color: '#ff7506', zIndex: 100 }}
+                                    />
+                                </div>
+
+
+                            }
+                            defaultValue={[moment('26/07/2022', dateFormat), moment('27/07/2022', dateFormat)]}
+                            separator={<CaretRightOutlined />}
+                            style={{ backgroundColor: '#f0f2f5', left: -12 }}
+                            prevIcon={<LeftOutlined style={{ color: '#ff7506', fontWeight: 700, marginLeft: 20 }} />}
+                            nextIcon={<RightOutlined style={{ color: '#ff7506', fontWeight: 700, marginRight: 20 }} />}
+                            onChange={onChange}
+                        />
                     </Form.Item>
                 </Form>
                 <Form layout='inline' style={{ width: 500 }}>
@@ -72,6 +107,7 @@ const DairyList: React.FC<Props> = (props: Props) => {
                                         style={{ color: '#FF7506', fontSize: 20 }}
                                     />
                                 }
+                                onChange={(e) => setKeywords(e.target.value)}
                             />
                         </Col>
                     </Col>

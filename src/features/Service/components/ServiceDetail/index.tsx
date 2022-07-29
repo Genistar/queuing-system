@@ -1,37 +1,60 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Badge, Card, Col, DatePicker, Form, Input, Row, Select, Table, Typography } from 'antd'
-import { CaretDownOutlined, SearchOutlined, EditOutlined, RollbackOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, SearchOutlined, EditOutlined, RollbackOutlined, CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from '../ServiceList/Style'
 import './Style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { giveNumberType, numberData, serviceType } from '../../../../constants/interface';
 import { ColumnsType } from 'antd/lib/table';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import serviceReducer, { get, serviceSelector } from '../../serviceSlice';
 import { getByIdService, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
+import { RangePickerProps } from 'antd/lib/date-picker';
+import { RangeValue } from "rc-picker/lib/interface";
+import moment, { Moment } from 'moment';
 const { Title, Text } = Typography;
+const { Option } = Select;
 type QuizParams = {
     key: any;
 };
+const { RangePicker } = DatePicker;
 interface Props {
 }
-
+const dateFormat = 'DD/MM/YYYY';
 const ServiceDetail: React.FC<Props> = (props: Props) => {
     let { key } = useParams<QuizParams>();
+    const [status, setStatus] = useState<string | null>(null);
+    const [dateRange, setDateRange] = useState<RangeValue<Moment>>(null);
+    const [keywords, setKeywords] = useState<string>("");
     const dispatch = useAppDispatch();
     const { service } = useAppSelector(serviceSelector);
-    const { loading, giveNumbersFilter } = useAppSelector(giveNumberSelector)
+    const { loading, giveNumbersFilter } = useAppSelector(giveNumberSelector);
     useEffect(() => {
         dispatch(get(key))
     }, [key])
     useEffect(() => {
         if (key) {
-            dispatch(getByIdService({ key }))
+            dispatch(getByIdService({
+                key,
+                filter: {
+                    status,
+                    keywords,
+                    dateRange: dateRange ? [dateRange[0] as Moment, dateRange[1] as Moment] : null
+                }
+            }))
         }
-    }, [key])
-    console.log(giveNumbersFilter)
+    }, [key, status, dateRange])
+    const onChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
+        if (dates) {
+            console.log('From: ', dates[0], ', to: ', moment(dates[1]).format('HH:mm DD/MM/YYYY'));
+            console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+            setDateRange([dates[0], dates[1]])
+        } else {
+            console.log('Clear');
+        }
+    };
     const columns = [
         {
             title: 'Số thứ tự',
@@ -137,18 +160,41 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                                             style={dropdownIconStyle}
                                         />
                                     }
+                                    onChange={(e) => { setStatus(e) }}
+                                    defaultValue={null}
                                 >
+                                    <Option key={1} value={null}> Tất cả</Option>
+                                    <Option key={2} value='waiting'> Đang chờ</Option>
+                                    <Option key={3} value='used'> Đã sử dụng</Option>
+                                    <Option key={4} value='skip'> Bỏ qua</Option>
                                 </Select>
                             </Col>
                             <Col span={4} style={{ position: 'absolute', left: 175, width: 320 }}>
                                 <Text style={{ fontSize: 16, width: 200 }}>Chọn thời gian</Text>
                                 <Form layout='inline' style={{ width: 335, position: 'absolute', top: 34 }}>
-                                    <Form.Item style={{ width: 130 }}>
-                                        <DatePicker suffixIcon={<FontAwesomeIcon icon={faCalendarDay} style={{ marginLeft: '-80px', marginBottom: 3, color: '#FF7506' }} />} />
-                                    </Form.Item>
-                                    <Form.Item style={{ width: 130 }}>
-                                        <DatePicker suffixIcon={<FontAwesomeIcon icon={faCalendarDay} style={{ marginLeft: '-80px', marginBottom: 3, color: '#FF7506' }} />} />
-                                    </Form.Item>
+                                    <RangePicker
+                                        showTime
+                                        suffixIcon={
+                                            <div style={{ zIndex: 100 }}>
+                                                <FontAwesomeIcon
+                                                    icon={faCalendar}
+                                                    style={{ marginLeft: -280, color: '#ff7506', zIndex: 100 }}
+                                                />
+                                                <FontAwesomeIcon
+                                                    icon={faCalendar}
+                                                    style={{ marginLeft: 147, color: '#ff7506', zIndex: 100 }}
+                                                />
+                                            </div>
+
+
+                                        }
+                                        defaultValue={[moment('26/07/2022', dateFormat), moment('27/07/2022', dateFormat)]}
+                                        separator={<CaretRightOutlined />}
+                                        style={{ backgroundColor: '#ffffff', left: -12 }}
+                                        prevIcon={<LeftOutlined style={{ color: '#ff7506', fontWeight: 700, marginLeft: 20 }} />}
+                                        nextIcon={<RightOutlined style={{ color: '#ff7506', fontWeight: 700, marginRight: 20 }} />}
+                                        onChange={onChange}
+                                    />
                                 </Form>
 
                             </Col>
@@ -163,6 +209,7 @@ const ServiceDetail: React.FC<Props> = (props: Props) => {
                                             style={{ color: '#FF7506', fontSize: 20, left: 100 }}
                                         />
                                     }
+                                    onChange={(e) => { setKeywords(e.target.value) }}
                                 />
                             </Col>
                         </Row>

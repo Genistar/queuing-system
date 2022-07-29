@@ -18,7 +18,7 @@ const App = () => {
         <Router>
             <Provider store={store}>
                 <Routes>
-                    <Route path='/admin' element={<HomePage />} />
+                    <Route path='/' element={<LayoutPage />} />
                     <Route path='/auth/*' element={<LoginPage />} />
                     <Route path='/admin/*' element={<LayoutPage />} />
 

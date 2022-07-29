@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import moment from 'moment';
 import { db } from '../../config/firebase';
 import { defaultGiveNumberState, giveNumberType, Ifilter, serviceType } from '../../constants/interface';
 import { RootState } from '../../store';
@@ -28,6 +29,31 @@ export const getAll = createAsyncThunk("givenumbers/getAll",
             });
         });
         if (filter) {
+            giveNumbers = giveNumbers.filter((giveNumber) => {
+                if (filter.dateRange != null) {
+                    const dateProvider = moment(giveNumber.timeGet.toDate());
+                    if (
+                        filter.dateRange[0] &&
+                        !moment(filter.dateRange[0]).isSameOrBefore(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        filter.dateRange[1] &&
+                        !moment(filter.dateRange[1]).isSameOrAfter(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            });
             if (filter.service != null)
                 giveNumbers = giveNumbers.filter(
                     (giveNumber) => giveNumber.serviceName === filter.service
@@ -49,6 +75,7 @@ export const getAll = createAsyncThunk("givenumbers/getAll",
 
 
                 );
+
         }
         // for (const user of users) {
         //     const roleSnap = await getDoc(doc(db, "roles", user.role as string));
@@ -90,9 +117,34 @@ export const getByIdService = createAsyncThunk(
                 doc(db, "services", giveNumber.service as string)
             );
             const temp = Snap.data() as serviceType;
-            giveNumber.number = temp.prefix + giveNumber.stt;
+            giveNumber.number = temp.serviceId + temp.prefix + giveNumber.stt;
         }
         if (filter) {
+            giveNumbers = giveNumbers.filter((giveNumber) => {
+                if (filter.dateRange != null) {
+                    const dateProvider = moment(giveNumber.timeGet.toDate());
+                    if (
+                        filter.dateRange[0] &&
+                        !moment(filter.dateRange[0]).isSameOrBefore(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        filter.dateRange[1] &&
+                        !moment(filter.dateRange[1]).isSameOrAfter(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            });
             if (filter.status != null)
                 giveNumbers = giveNumbers.filter(
                     (giveNumber) => giveNumber.status == filter.status
@@ -119,7 +171,7 @@ export const addGiveNumber = createAsyncThunk(
 
         const querySnapshot = await getDocs(
             query(
-                collection(db, "giveNumber"),
+                collection(db, "givenumber"),
                 where("service", "==", values.service)
             )
         );
@@ -138,9 +190,10 @@ export const addGiveNumber = createAsyncThunk(
         await setDoc(newDoc, {
             ...values,
             stt: giveNumbers.length > 0 ? giveNumbers[0].stt + 1 : 1,
+            number: values.number + (giveNumbers.length > 0 ? giveNumbers[0].stt + 1 : 1).toString()
         });
 
-        const Ref = doc(db, "giveNumber", newDoc.id);
+        const Ref = doc(db, "givenumber", newDoc.id);
         const Snap = await getDoc(Ref);
         return Snap.id;
     }

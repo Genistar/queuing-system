@@ -86,8 +86,6 @@ body{
   padding-top: 8px;
   padding-bottom: 40px;
   background-color: #FF9138;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 .ant-input-affix-wrapper > input.ant-input {
   margin-top: -0.5px;
@@ -115,17 +113,12 @@ body{
 }
 .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   z-index: 1;
   border: 1px solid #ff7506;
   border-radius: 8px;
   content: '';
 }
 .ant-picker-calendar-date-value{
-  padding-top: 6px;
   padding-right: 1px;
 }
 .ant-menu > .ant-menu-item:hover,
@@ -238,7 +231,7 @@ body{
   background: #ff7506; 
 }
 
-.ant-breadcrumb a {
+.ant-breadcrumb a,.ant-breadcrumb-link {
   color: #7E7D88;
   transition: color 0.3s;
   font-size: 20px;
@@ -248,6 +241,67 @@ body{
 .ant-breadcrumb li:last-child a {
   color: #ff7506;
 }
+
+.ant-picker-input {
+  padding: 9px 16px 8px 34px;
+  justify-content: space-between;
+  border: solid 1px #D4D4D7;
+  width: 130px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  height: 44px;
+}
+
+.ant-picker{
+  border: none;
+}
+.ant-picker-focused{
+  box-shadow: none;
+}
+.ant-picker-panel-container{
+  border-radius: 8px;
+  height: 386px;
+  width: 320px;
+}
+.ant-picker-header{
+  width: 320px;
+}
+.ant-picker-header{
+  height: 60px;
+}
+.ant-picker-date-panel .ant-picker-content {
+  width: 298px;
+}
+.ant-picker-header-super-next-btn,.ant-picker-header-super-prev-btn{
+  display: none;
+}
+.ant-picker-header-next-btn,.ant-picker-header-prev-btn{
+  color: #FF7506;
+}
+.ant-picker-time-panel{
+  display: none;
+}
+.ant-picker-content > thead > tr > th{
+  color: #FF7506;
+}
+.ant-picker-content > thead > tr > th,.ant-picker-content > tbody > tr > td{
+  font-weight: 700;
+}
+.ant-picker-header-view {
+  font-weight: 700;
+  color: #FF7506;
+  margin-top: 8px;
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-in-range::before {
+  background: #FFF2E7;
+  height: 36px;
+}
+
+.ant-picker-cell-inner {
+  padding-top: 5px;
+}
+
 
 .ant-badge-status-text {
   margin-left: 8px;

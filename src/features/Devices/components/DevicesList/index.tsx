@@ -16,7 +16,6 @@ const { Option } = Select;
 
 interface Props { }
 
-
 const columns: ColumnsType<deviceType> = [
     {
         title: 'Mã thiết bị',
@@ -59,22 +58,24 @@ const columns: ColumnsType<deviceType> = [
         title: 'Dịch vụ sử dụng',
         dataIndex: 'services',
         key: 'services',
-        render: (dataIndex) => (
-            <span>
-                {
-                    dataIndex.lenght < 20 ?
-                        dataIndex.map((datas: any) => {
-                            return dataIndex.find(
-                                (data: any) => data === datas
-                            )
-                        }).join(', ') : dataIndex.map((datas: any) => {
-                            return dataIndex.find(
-                                (data: any) => data === datas
-                            )
-                        }).join(', ').substring(0, 20)
-                }...<a style={{ textDecorationLine: 'underline' }}>Xem thêm</a>
-            </span>
-        ),
+        render: (dataIndex) => {
+            return (
+                <span>
+                    {
+                        dataIndex.lenght < 20 ?
+                            dataIndex.map((datas: any) => {
+                                return dataIndex.find(
+                                    (data: any) => data === datas
+                                )
+                            }).join(', ') : dataIndex.map((datas: any) => {
+                                return dataIndex.find(
+                                    (data: any) => data === datas
+                                )
+                            }).join(', ').substring(0, 20)
+                    }...<a style={{ textDecorationLine: 'underline' }}>Xem thêm</a>
+                </span>
+            )
+        },
     },
     {
         key: 'action',

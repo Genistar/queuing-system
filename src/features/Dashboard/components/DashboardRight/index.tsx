@@ -12,6 +12,7 @@ import { getAll, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice'
 import { getAll as getService, serviceSelector } from '../../../Service/serviceSlice'
 import { deviceSelector, getAll as getDevice } from '../../../Devices/deviceSlice'
 import { useAppDispatch, useAppSelector } from '../../../../store';
+import { DayRange } from '@hassanmojab/react-modern-calendar-datepicker';
 import DashboardMain from '../DashboardMain';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -22,8 +23,12 @@ const DashboardRight: React.FC = (props: Props) => {
   const { giveNumbers } = useAppSelector(giveNumberSelector);
   const { devices } = useAppSelector(deviceSelector);
   const { services } = useAppSelector(serviceSelector);
-  const [value, setValue] = useState(moment());
+  const [valueDate, setValueDate] = useState(moment());
   const [selectedValue, setSelectedValue] = useState(moment());
+  const [calendarValue, setCalendarValue] = useState<DayRange>({
+    from: null,
+    to: null
+  });
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAll());
@@ -114,9 +119,9 @@ const DashboardRight: React.FC = (props: Props) => {
   };
   const numberData = [
     {
-      name: 'waiting',
+      name: 'skip',
       star: giveNumbers.filter(
-        (value) => value.status == 'waiting'
+        (value) => value.status == 'skip'
       ).length,
     },
 
@@ -127,9 +132,9 @@ const DashboardRight: React.FC = (props: Props) => {
       ).length,
     },
     {
-      name: 'skip',
+      name: 'waiting',
       star: giveNumbers.filter(
-        (value) => value.status == 'skip'
+        (value) => value.status == 'waiting'
       ).length,
     },
   ];
@@ -166,13 +171,17 @@ const DashboardRight: React.FC = (props: Props) => {
     console.log(value.format('YYYY-MM-DD'), mode);
   };
   const onSelect = (date: Moment) => {
-    setValue(date);
-    setSelectedValue(date);
-    console.log(value.format('DD-MM-YYYY'))
+    setValueDate(date);
+    setCalendarValue({
+      from: { year: date.year(), month: date.month() + 1, day: 1 },
+      to: { year: date.year(), month: date.month() + 1, day: date.date() }
+    })
+
   }
+  console.log(valueDate.date(), '+', valueDate.month() + 1, '+', valueDate.year())
   return (
     <div>
-      <DashboardMain />
+      <DashboardMain calendarValue={calendarValue} />
       <Col style={{ backgroundColor: '#FFF', height: 765, width: 401, marginTop: -85, position: 'absolute', marginLeft: 832 }}>
         <Title level={3} style={{ color: '#FF7506', marginTop: 104, marginLeft: 24 }}>Tổng quan</Title>
         <div style={{ marginTop: 110 }}>
@@ -293,7 +302,6 @@ const DashboardRight: React.FC = (props: Props) => {
                 // const localeData = value.localeData();
                 const increaseMonth = (e: number) => {
                   onChange(current.add(e, "month"));
-                  console.log(current);
                 };
                 return (
                   <div style={{ padding: 8, marginLeft: -30 }}>

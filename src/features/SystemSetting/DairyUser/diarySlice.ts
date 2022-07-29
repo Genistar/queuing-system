@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import moment from 'moment';
 import { db } from '../../../config/firebase';
 import { defaultDiaryState, diaryType, Ifilter } from '../../../constants/interface';
 import { RootState } from '../../../store';
@@ -27,6 +28,31 @@ export const getAll = createAsyncThunk(
             console.log(value.data() as diaryType);
         });
         if (filter) {
+            diaries = diaries.filter((diary) => {
+                if (filter.dateRange != null) {
+                    const dateProvider = moment(diary.time.toDate());
+                    if (
+                        filter.dateRange[0] &&
+                        !moment(filter.dateRange[0]).isSameOrBefore(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    if (
+                        filter.dateRange[1] &&
+                        !moment(filter.dateRange[1]).isSameOrAfter(
+                            dateProvider,
+                            "days"
+                        )
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            });
             if (filter.keywords != "")
                 diaries = diaries.filter(
                     (diary) =>

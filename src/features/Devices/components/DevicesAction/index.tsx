@@ -65,6 +65,8 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
             username: user,
             password: password,
             services: service,
+            isActive: false,
+            isConnect: true
         }
         if (!key) {
             dispatch(add(newDevice)).then((data) => {
@@ -76,6 +78,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                         action: `Thêm thiết bị ${newDevice.name}`,
                         time: Timestamp.fromDate(new Date())
                     }))
+                    navigate('../')
                 }
                 else {
                     notice.success('Đã xảy ra lỗi', 2);
@@ -94,6 +97,7 @@ const DevicesAction: React.FC<Props> = (props: Props) => {
                         action: `Cập nhật thiết bị ${newDevice.name}`,
                         time: Timestamp.fromDate(new Date())
                     }))
+                    navigate('../')
                 }
                 else {
                     notice.success('Đã xảy ra lỗi', 2)

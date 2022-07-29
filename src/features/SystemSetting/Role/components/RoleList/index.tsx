@@ -8,6 +8,7 @@ import { addDeviceStyle, addTextStyle, cardButtonAddStyle, iconAddStyle } from '
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { getAll, roleSelector } from '../../roleSlice';
+import { userSelector, getAll as getUsers } from '../../../Account/userSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -44,8 +45,10 @@ const columns: ColumnsType<roleType> = [
 const RoleList: React.FC<Props> = (props: Props) => {
     const { roles, loading } = useAppSelector(roleSelector);
     const dispatch = useAppDispatch();
+    const { users } = useAppSelector(userSelector)
     useEffect(() => {
         dispatch(getAll())
+        dispatch(getUsers())
     }, [])
     return (
         <div>
@@ -76,7 +79,7 @@ const RoleList: React.FC<Props> = (props: Props) => {
                     dataSource={
                         roles.map(role => ({
                             ...role,
-                            amountOfUser: role.amountOfUser
+                            amountOfUser: users.filter((value) => (value.role === role.name)).length
                         }))
                     }
                     columns={columns}

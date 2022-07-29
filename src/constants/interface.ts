@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import * as H from "history";
+import { Moment } from "moment";
 export interface devicesData {
     key: string;
     name: string;
@@ -157,6 +158,7 @@ export interface Ifilter {
     service?: string | null,
     status?: string | null,
     source?: string | null,
+    dateRange?: [Moment, Moment] | null;
 }
 
 export type deviceType = {

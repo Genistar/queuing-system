@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
-import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, SearchOutlined, PlusOutlined, CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { addDeviceStyle, addTextStyle, cardButtonAddStyle, dropdownIconStyle, iconAddStyle, textStyle, titlePageStyle } from './Style';
-import { serviceData, serviceType } from '../../../../constants/interface'
+import { serviceData, serviceType } from '../../../../constants/interface';
+import { RangePickerProps } from 'antd/lib/date-picker';
+import { RangeValue } from "rc-picker/lib/interface";
 import 'antd/dist/antd.css';
 import './Style.css';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { getAll, serviceSelector } from '../../serviceSlice';
+import moment, { Moment } from 'moment';
 const { Title, Text } = Typography;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 interface Props {
 }
 
+const dateFormat = 'DD/MM/YYYY';
 const columns: ColumnsType<serviceType> = [
     {
         title: 'Mã dịch vụ',
@@ -57,13 +62,14 @@ const columns: ColumnsType<serviceType> = [
         render: (_, record) => {
             return (
                 <Space size="middle">
-                    <Link to={`/admin/services/update/${record.id}`}>Cập nhật</Link>
+                    <Link to={`/admin/service/update/${record.id}`}>Cập nhật</Link>
                 </Space>
             )
         }
     },
 ];
 const ServiceList: React.FC<Props> = (props: Props) => {
+    const [dateRange, setDateRange] = useState<RangeValue<Moment>>(null);
     const [active, setActive] = useState<boolean | null>(null);
     const [keywords, setKeywords] = useState<string>("")
     const dispatch = useAppDispatch();
@@ -71,6 +77,15 @@ const ServiceList: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         dispatch(getAll({ keywords, active }))
     }, [keywords, active])
+    const onChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
+        if (dates) {
+            console.log('From: ', dates[0], ', to: ', moment(dates[1]).format('HH:mm DD/MM/YYYY'));
+            console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+            setDateRange([dates[0], dates[1]])
+        } else {
+            console.log('Clear');
+        }
+    };
     return (
         <div style={{ width: 700 }}>
             <Title level={3} style={titlePageStyle}>
@@ -104,21 +119,29 @@ const ServiceList: React.FC<Props> = (props: Props) => {
                 <Col span={4} style={{ position: 'absolute', left: 320, width: 320 }}>
                     <Text style={textStyle}>Chọn thời gian</Text>
                     <Form layout='inline' style={{ width: 335, position: 'absolute', top: 34 }}>
-                        <Form.Item style={{ width: 150 }}>
-                            <DatePicker
-                                suffixIcon={<FontAwesomeIcon icon={faCalendarDay}
-                                    style={{ marginLeft: '-100px', marginBottom: 3, color: '#FF7506' }} />}
-                                placeholder='7/7/2022'
-                            />
-                        </Form.Item>
-                        <Form.Item style={{ width: 150 }}>
-                            <DatePicker
-                                placeholder='8/7/2022'
-                                suffixIcon={<FontAwesomeIcon icon={faCalendarDay}
-                                    style={{ marginLeft: '-100px', marginBottom: 3, color: '#FF7506' }}
-                                />}
-                            />
-                        </Form.Item>
+                        <RangePicker
+                            showTime
+                            suffixIcon={
+                                <div style={{ zIndex: 100 }}>
+                                    <FontAwesomeIcon
+                                        icon={faCalendar}
+                                        style={{ marginLeft: -280, color: '#ff7506', zIndex: 100 }}
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={faCalendar}
+                                        style={{ marginLeft: 147, color: '#ff7506', zIndex: 100 }}
+                                    />
+                                </div>
+
+
+                            }
+                            defaultValue={[moment('26/07/2022', dateFormat), moment('27/07/2022', dateFormat)]}
+                            separator={<CaretRightOutlined />}
+                            style={{ backgroundColor: '#f0f2f5', left: -12 }}
+                            prevIcon={<LeftOutlined style={{ color: '#ff7506', fontWeight: 700, marginLeft: 20 }} />}
+                            nextIcon={<RightOutlined style={{ color: '#ff7506', fontWeight: 700, marginRight: 20 }} />}
+                            onChange={onChange}
+                        />
                     </Form>
 
                 </Col>

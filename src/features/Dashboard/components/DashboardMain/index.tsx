@@ -10,28 +10,24 @@ import { dropdownIconStyle } from '../../../Devices/components/DevicesList/Style
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { getAll, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
 import { DayRange } from '@hassanmojab/react-modern-calendar-datepicker';
-import { deviceSelector } from '../../../Devices/deviceSlice';
-import { serviceSelector } from '../../../Service/serviceSlice';
 const { Title, Text } = Typography;
 const { Option } = Select;
-type Props = {}
-const selectData = ['Ngày', 'Tháng', 'Năm']
+type Props = {
+    calendarValue: DayRange
+}
 const DashboardMain = (props: Props) => {
+    const { calendarValue } = props;
     const [select, setSelect] = useState("date");
     const { giveNumbers } = useAppSelector(giveNumberSelector);
-    const { devices } = useAppSelector(deviceSelector);
-    const { services } = useAppSelector(serviceSelector);
-    const [calendarValue, setCalendarValue] = useState<DayRange>({
-        from: null,
-        to: null,
-    });
     const dispatch = useAppDispatch();
     useEffect(() => {
+
         dispatch(getAll());
     }, [])
 
+
     const handleChange = (value: any) => {
-        setSelect(selectData[value])
+        setSelect(value)
     }
     const data = useMemo(() => {
         let start = calendarValue.from ? calendarValue.from.day : 0;
@@ -225,7 +221,7 @@ const DashboardMain = (props: Props) => {
                     <div style={AreaStyle}>
                         <Title level={5} style={{ fontWeight: 600 }}>Xem thêm</Title>
                         <Select
-                            defaultValue={selectData[0]}
+                            defaultValue='Ngày'
                             style={selectAreaStyle}
                             size='middle'
                             onChange={handleChange}

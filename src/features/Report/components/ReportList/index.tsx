@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, Row, Select, Typography, Space, Table, Card, Badge, Form, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
-import { CaretDownOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
+import { CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { giveNumberData, giveNumberType } from '../../../../constants/interface'
 import 'antd/dist/antd.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { addTextStyle, titlePageStyle } from '../../../GiveNumber/components/GiveNumberList/Style';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { getAll, giveNumberSelector } from '../../../GiveNumber/giveNumberSlice';
-import moment from 'moment';
+import { RangeValue } from "rc-picker/lib/interface";
+import moment, { Moment } from 'moment';
+import { RangePickerProps } from 'antd/lib/date-picker';
 const { Title, Text } = Typography;
-const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 interface Props {
 }
 
-const activeData = ['Tất cả', 'Đang hoạt động', 'Dừng hoạt động'];
-const serviceData = ['Tất cả', 'Rặng hàm mặt', 'Khoa sản', 'Phụ sản'];
-const nguonCapData = ['Tất cả', 'Kiosk']
+const dateFormat = 'DD/MM/YYYY';
 const columns: ColumnsType<giveNumberType> = [
     {
         title: 'STT',
@@ -53,39 +53,55 @@ const columns: ColumnsType<giveNumberType> = [
     }
 ];
 const ReportList: React.FC<Props> = (props: Props) => {
-    const [active, setActive] = useState<String>(activeData[0]);
-    const [service, setService] = useState<String>(serviceData[0]);
-    const [nguonCap, setNguonCap] = useState<String>(nguonCapData[0]);
+    const [dateRange, setDateRange] = useState<RangeValue<Moment>>(null);
+    const [keywords, setKeywords] = useState('')
     const { giveNumbers, loading } = useAppSelector(giveNumberSelector)
     const dispatch = useAppDispatch()
     useEffect(() => {
-        dispatch(getAll())
-    }, [])
+        dispatch(getAll({ keywords, dateRange: dateRange ? [dateRange[0] as Moment, dateRange[1] as Moment] : null }))
+    }, [dateRange])
+    const onChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
+        if (dates) {
+            console.log('From: ', dates[0], ', to: ', moment(dates[1]).format('HH:mm DD/MM/YYYY'));
+            console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+            setDateRange([dates[0], dates[1]])
+        } else {
+            console.log('Clear');
+        }
+    };
     return (
         <div>
             <Title level={3} style={titlePageStyle}>
                 Quản lý cấp số
             </Title>
-            <Row style={{ width: 1200, position: 'absolute', top: 136, left: 24 }}>
+            <Row style={{ width: 1200, position: 'absolute', top: 116, left: 24 }}>
                 <Form layout='inline' style={{ width: 500 }}>
                     <Col span={4} style={{ position: 'absolute', left: 200, width: 320 }}>
                         <Text style={addTextStyle}>Chọn thời gian</Text>
                         <Form layout='inline' style={{ width: 335, position: 'absolute', top: 34 }}>
-                            <Form.Item style={{ width: 150 }}>
-                                <DatePicker
-                                    suffixIcon={<FontAwesomeIcon icon={faCalendarDay}
-                                        style={{ marginLeft: '-100px', marginBottom: 3, color: '#FF7506' }} />}
-                                    placeholder='7/7/2022'
-                                />
-                            </Form.Item>
-                            <Form.Item style={{ width: 150 }}>
-                                <DatePicker
-                                    placeholder='8/7/2022'
-                                    suffixIcon={<FontAwesomeIcon icon={faCalendarDay}
-                                        style={{ marginLeft: '-100px', marginBottom: 3, color: '#FF7506' }}
-                                    />}
-                                />
-                            </Form.Item>
+                            <RangePicker
+                                showTime
+                                suffixIcon={
+                                    <div style={{ zIndex: 100 }}>
+                                        <FontAwesomeIcon
+                                            icon={faCalendar}
+                                            style={{ marginLeft: -280, color: '#ff7506', zIndex: 100 }}
+                                        />
+                                        <FontAwesomeIcon
+                                            icon={faCalendar}
+                                            style={{ marginLeft: 147, color: '#ff7506', zIndex: 100 }}
+                                        />
+                                    </div>
+
+
+                                }
+                                defaultValue={[moment('26/07/2022', dateFormat), moment('27/07/2022', dateFormat)]}
+                                separator={<CaretRightOutlined />}
+                                style={{ backgroundColor: '#f0f2f5', left: -12 }}
+                                prevIcon={<LeftOutlined style={{ color: '#ff7506', fontWeight: 700, marginLeft: 20 }} />}
+                                nextIcon={<RightOutlined style={{ color: '#ff7506', fontWeight: 700, marginRight: 20 }} />}
+                                onChange={onChange}
+                            />
                         </Form>
 
                     </Col>
@@ -107,12 +123,12 @@ const ReportList: React.FC<Props> = (props: Props) => {
                     loading={loading}
                     rowClassName={(record: any, index: any) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
                     style={{
-                        position: 'absolute', top: 224, left: 224, width: 1152,
+                        position: 'absolute', top: 204, left: 224, width: 1152,
                         filter: 'drop-shadow(2px 2px 8px rgba(232, 239, 244, 0.8))', backgroundColor: '#f9sdj9',
                     }}
                     bordered
                     pagination={{
-                        defaultPageSize: 8,
+                        defaultPageSize: 7,
                         position: ["bottomRight"],
                         showLessItems: true,
                         showSizeChanger: false,

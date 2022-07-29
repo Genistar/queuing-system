@@ -64,7 +64,7 @@ const ServiceAction: React.FC = (props: Props) => {
                 prefix: prefix === true ? value.prefix : '',
                 surfix: surfix === true ? value.surfix : '',
                 reset: reset === true ? true : false,
-                isActive: false
+                isActive: true
             })).then(
                 (data) => {
                     if (data.meta.requestStatus === 'fulfilled') {
@@ -75,6 +75,7 @@ const ServiceAction: React.FC = (props: Props) => {
                             action: `Thêm ${value.name}`,
                             time: Timestamp.fromDate(new Date())
                         }))
+                        navigate('../')
                     }
                     else {
 
@@ -82,9 +83,10 @@ const ServiceAction: React.FC = (props: Props) => {
                         dispatch(addDiary({
                             username: userLogin ? userLogin.username : '',
                             ip: '192.168.1.1',
-                            action: `Cập nhật ${value.name}`,
+                            action: `Thêm ${value.name}`,
                             time: Timestamp.fromDate(new Date())
                         }))
+
                     }
                 }
             )
@@ -100,6 +102,13 @@ const ServiceAction: React.FC = (props: Props) => {
                 if (data.meta.requestStatus === 'fulfilled') {
                     dispatch(get(key))
                     notice.success('Cập nhật thành công ', 3);
+                    dispatch(addDiary({
+                        username: userLogin ? userLogin.username : '',
+                        ip: '192.168.1.1',
+                        action: `Cập nhật ${value.name}`,
+                        time: Timestamp.fromDate(new Date())
+                    }))
+                    navigate('../')
                 }
                 else {
                     notice.success('Đã xảy ra lỗi', 2)
